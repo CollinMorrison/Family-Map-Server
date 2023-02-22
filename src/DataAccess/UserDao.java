@@ -49,7 +49,7 @@ public class UserDao {
 
     /**
      * Returns a list of all the users in the database
-     * @return List<User>
+     * @return List of users
      */
     public List<User> GetAllUsers() {
         return null;

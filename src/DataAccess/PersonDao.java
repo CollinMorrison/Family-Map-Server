@@ -51,7 +51,7 @@ public class PersonDao {
 
     /**
      * Returns a list of all the persons in the database
-     * @return List<Person>
+     * @return List of persons
      */
     public List<Person> GetAllPersons() {
         return null;

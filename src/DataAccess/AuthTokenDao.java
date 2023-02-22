@@ -50,7 +50,7 @@ public class AuthTokenDao {
 
     /**
      * Gets a list of all the AuthTokens in the database
-     * @return List<AuthToken>
+     * @return List of AuthTokens
      * @throws DataAccessException
      */
     public List<AuthToken> GetAllAuthTokens() throws DataAccessException{

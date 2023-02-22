@@ -100,7 +100,7 @@ public class EventDao {
     /**
      * Gets the list of event associated with a user
      * @param user
-     * @return List<Event>
+     * @return List of events
      */
     public List<Event> FindByUser(User user) {
         return null;
