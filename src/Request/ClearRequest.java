@@ -1,2 +1,7 @@
-package Request;public class ClearRequest {
+package Request;
+
+/**
+ * Stores all necessary information to make a clear request
+ */
+public class ClearRequest {
 }
