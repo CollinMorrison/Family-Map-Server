@@ -45,7 +45,7 @@ public class User {
      * @param gender
      * @param personID
      */
-    User(String username, String password, String email, String firstName, String lastName, String gender, String personID) {
+     public User(String username, String password, String email, String firstName, String lastName, String gender, String personID) {
         this.username = username;
         this.password = password;
         this.email = email;
