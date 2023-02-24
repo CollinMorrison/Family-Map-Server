@@ -41,6 +41,7 @@ public class UserDao {
             stmt.setString(5, user.getLastName());
             stmt.setString(6, user.getGender());
             stmt.setString(7, user.getPersonID());
+            stmt.executeUpdate();
         } catch (SQLException e){
             e.printStackTrace();
             throw new DataAccessException("Error encountered while inserting a user into the database");
