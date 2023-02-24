@@ -4,6 +4,8 @@ import Model.AuthToken;
 import Model.User;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -28,7 +30,21 @@ public class UserDao {
      * @param user
      * @throws DataAccessException
      */
-    public void insert(User user) throws DataAccessException {}
+    public void insert(User user) throws DataAccessException {
+        String sql = "INSERT INTO user (username, password, email, firstName, lastName, gender, personID) VALUES(?,?,?,?,?,?,?)";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, user.getUsername());
+            stmt.setString(2, user.getPassword());
+            stmt.setString(3, user.getEmail());
+            stmt.setString(4, user.getFirstName());
+            stmt.setString(5, user.getLastName());
+            stmt.setString(6, user.getGender());
+            stmt.setString(7, user.getPersonID());
+        } catch (SQLException e){
+            e.printStackTrace();
+            throw new DataAccessException("Error encountered while inserting a user into the database");
+        }
+    }
 
     /**
      * Finds a user by their username
