@@ -1,7 +1,5 @@
 package Model;
 
-import java.util.Objects;
-
 /**
  * Template for user entities as they appear in the database
  */
