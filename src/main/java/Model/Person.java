@@ -1,5 +1,7 @@
 package Model;
 
+import java.util.Objects;
+
 /**
  * Template for person entities as they appear in the database
  */
@@ -48,7 +50,7 @@ public class Person {
      * @param motherID
      * @param spouseID
      */
-    public Person(String personID, String associatedUsername, String firstName, String lastName, String gender, String fatherID, String motherID, String spouseID) {
+    public Person(String personID, String associatedUsername, String firstName, String lastName, String fatherID, String motherID, String spouseID, String gender) {
         this.personID = personID;
         this.associatedUsername = associatedUsername;
         this.firstName = firstName;
@@ -130,6 +132,9 @@ public class Person {
      */
     @Override
     public boolean equals(Object o) {
-        return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return Objects.equals(personID, person.personID) && Objects.equals(associatedUsername, person.associatedUsername) && Objects.equals(firstName, person.firstName) && Objects.equals(lastName, person.lastName) && Objects.equals(fatherID, person.fatherID) && Objects.equals(motherID, person.motherID) && Objects.equals(spouseID, person.spouseID) && Objects.equals(gender, person.gender);
     }
 }

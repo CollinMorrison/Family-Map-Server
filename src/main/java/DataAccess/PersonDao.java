@@ -33,16 +33,16 @@ public class PersonDao {
      * @throws DataAccessException
      */
     public void Insert(Person person) throws DataAccessException {
-        String sql = "INSERT INTO person (personID, associatedUsername, firstName, lastName, gender, fatherID, motherID, spouseID) VALUES(?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO Person (personID, associatedUsername, firstName, lastName, fatherID, motherID, spouseID, gender) VALUES(?,?,?,?,?,?,?,?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, person.getPersonID());
             stmt.setString(2, person.getAssociatedUsername());
             stmt.setString(3, person.getFirstName());
             stmt.setString(4, person.getLastName());
-            stmt.setString(5, person.getGender());
-            stmt.setString(6, person.getFatherID());
-            stmt.setString(7, person.getMotherID());
-            stmt.setString(8, person.getSpouseID());
+            stmt.setString(5, person.getFatherID());
+            stmt.setString(6, person.getMotherID());
+            stmt.setString(7, person.getSpouseID());
+            stmt.setString(8, person.getGender());
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -59,11 +59,12 @@ public class PersonDao {
     public Person Find(String personID) throws DataAccessException {
         Person person;
         ResultSet rs;
-        String sql = "SELECT * FROM person WHERE personID = ?;";
+        String sql = "SELECT * FROM Person WHERE personID = ?;";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, personID);
             rs = stmt.executeQuery();
             if (rs.next()) {
-                person = new Person(rs.getString("personID"), rs.getString("associatedUsername"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("gender"), rs.getString("fatherID"), rs.getString("motherID"), rs.getString("spouseID"));
+                person = new Person(rs.getString("personID"), rs.getString("associatedUsername"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("fatherID"), rs.getString("motherID"), rs.getString("spouseID"), rs.getString("gender"));
                 return person;
             } else {
                 return null;
@@ -94,7 +95,7 @@ public class PersonDao {
      * @throws DataAccessException
      */
     public void clear() throws DataAccessException {
-        String sql = "DELETE FROM person";
+        String sql = "DELETE FROM Person";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.executeUpdate();
         } catch (SQLException e) {

@@ -32,7 +32,7 @@ public class UserDao {
      * @throws DataAccessException
      */
     public void insert(User user) throws DataAccessException {
-        String sql = "INSERT INTO user (username, password, email, firstName, lastName, gender, personID) VALUES(?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO User (username, password, email, firstName, lastName, gender, personID) VALUES(?,?,?,?,?,?,?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getPassword());
@@ -57,7 +57,7 @@ public class UserDao {
     public User find(String username) throws DataAccessException {
         User user;
         ResultSet rs;
-        String sql = "SELECT * FROM user WHERE username = ?;";
+        String sql = "SELECT * FROM User WHERE username = ?;";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, username);
             rs = stmt.executeQuery();
@@ -103,7 +103,7 @@ public class UserDao {
      * @throws DataAccessException
      */
     public void clear() throws DataAccessException {
-        String sql = "DELETE FROM user";
+        String sql = "DELETE FROM User";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.executeUpdate();
         } catch (SQLException e) {

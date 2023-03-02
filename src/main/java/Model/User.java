@@ -1,5 +1,7 @@
 package Model;
 
+import java.util.Objects;
+
 /**
  * Template for user entities as they appear in the database
  */
@@ -116,6 +118,9 @@ public class User {
      */
     @Override
     public boolean equals(Object o) {
-        return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(gender, user.gender) && Objects.equals(personID, user.personID);
     }
 }
