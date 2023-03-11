@@ -64,9 +64,8 @@ public class PersonDaoTest {
     @Test
     public void clearTest() throws DataAccessException {
         pDao.Insert(bestPerson);
-        Person compareTest = pDao.Find(bestPerson.getPersonID());
         pDao.clear();
         Person undefinedPerson = pDao.Find(bestPerson.getPersonID());
-        assertNotEquals(compareTest, undefinedPerson);
+        assertNull(undefinedPerson);
     }
 }

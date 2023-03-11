@@ -63,9 +63,8 @@ public class UserDaoTest {
     @Test
     public void clearTest() throws DataAccessException {
         uDao.insert(bestUser);
-        User compareTest = uDao.find(bestUser.getUsername());
         uDao.clear();
         User undefinedUser = uDao.find(bestUser.getUsername());
-        assertNotEquals(compareTest, undefinedUser);
+        assertNull(undefinedUser);
     }
 }
