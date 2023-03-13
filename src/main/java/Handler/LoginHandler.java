@@ -34,12 +34,10 @@ public class LoginHandler implements HttpHandler{
                     String password = reqObject.get("password").getAsString();
                     System.out.println(username + " " + password);
                     LoginRequest request = new LoginRequest(username, password);
-                    //Check if the authToken is valid, if it is, get what user it belongs to
-                    //if the auth token is valid
-                    if (loginService.authTokenIsValid(username)) {
-                        //System.out.println(authToken);
-                        //Send request and get response
-                        LoginResult response = loginService.login(request);
+                    //Send request and get response
+                    LoginResult response = loginService.login(request);
+                    //if the response was valid
+                    if (response != null) {
                         String respData = gson.toJson(response);
                         exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
                         OutputStream respBody = exchange.getResponseBody();
@@ -47,7 +45,7 @@ public class LoginHandler implements HttpHandler{
                         respBody.close();
                         success = true;
                     }
-                }
+            }
             //}
             if (!success) {
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);

@@ -30,10 +30,13 @@ public class LoginService {
             //create the userDao and authTokenDao to interact with the database
             UserDao userDao = new UserDao(database.getConnection());
             AuthTokenDao authTokenDao = new AuthTokenDao(database.getConnection());
+            //Get the auth token associated with the username
+            AuthToken authToken = userDao.Validate(r.getUsername(), r.getPassword());
+            if (authToken == null) {
+                return null;
+            }
             //get the user associated with the username
             User user = userDao.find(r.getUsername());
-            //Get the auth token associated with the username
-            AuthToken authToken = authTokenDao.Find(r.getUsername());
             //Create the login result
             String username = user.getUsername();
             String personID = user.getPersonID();
@@ -44,18 +47,4 @@ public class LoginService {
         }
     }
 
-    public boolean authTokenIsValid (String username) {
-        boolean isValid = false;
-        try {
-            Database database = new Database();
-            AuthTokenDao authTokenDao = new AuthTokenDao(database.getConnection());
-            //if the auth token is valid
-            if (authTokenDao.Find(username) != null) {
-                isValid = true;
-            }
-        } catch (DataAccessException e) {
-            e.printStackTrace();
-        }
-        return isValid;
-    }
 }

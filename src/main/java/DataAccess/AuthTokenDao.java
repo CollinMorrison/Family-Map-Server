@@ -4,6 +4,8 @@ package DataAccess;
 import Model.AuthToken;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -29,7 +31,16 @@ public class AuthTokenDao {
      * @param authToken
      * @throws DataAccessException
      */
-    public void insert(AuthToken authToken) throws DataAccessException{}
+    public void insert(AuthToken authToken) throws DataAccessException{
+        String sql = "INSERT INTO Authtoken (authtoke, username) VALUES(?,?);";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, authToken.getAuthToken());
+            stmt.setString(2, authToken.getUsername());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataAccessException("Error encountered while inserting an authtoken into the database");
+        }
+    }
 
     /**
      * Finds an AuthToken by username

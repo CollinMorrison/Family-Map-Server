@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Handles all database communication associated with a User object
@@ -32,7 +33,7 @@ public class UserDao {
      * @throws DataAccessException
      */
     public void insert(User user) throws DataAccessException {
-        String sql = "INSERT INTO User (username, password, email, firstName, lastName, gender, personID) VALUES(?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO User (username, password, email, firstName, lastName, gender, personID) VALUES(?,?,?,?,?,?,?);";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getPassword());
@@ -94,8 +95,32 @@ public class UserDao {
      * @param password
      * @return AuthToken
      */
-    public AuthToken Validate(String username, String password) {
-        return null;
+    public AuthToken Validate(String username, String password) throws DataAccessException {
+        ResultSet rs;
+        String sql = "SELECT * FROM User WHERE username = ? AND password = ?;";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, username);
+            stmt.setString(2, password);
+            rs = stmt.executeQuery();
+            if (!rs.next()) {
+                return null;
+            }
+        } catch(SQLException e) {
+            e.printStackTrace();
+            throw new DataAccessException("Error encountered while logging a user in the database");
+        }
+        UUID uuid = UUID.randomUUID();
+        String authTokenValue = uuid.toString();
+        AuthToken authToken = new AuthToken(authTokenValue, username);
+        //insert the new authToken into the database
+        AuthTokenDao authTokenDao = new AuthTokenDao(this.conn);
+        try {
+            authTokenDao.insert(authToken);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+        }
+
+        return authToken;
     }
 
     /**
