@@ -18,12 +18,12 @@ public class LoginHandler implements HttpHandler{
         try {
             if (exchange.getRequestMethod().toLowerCase().equals("post")) {
                 //System.out.println("in if block");
-                Headers reqHeaders = exchange.getRequestHeaders();
+                //Headers reqHeaders = exchange.getRequestHeaders();
                 //System.out.println("Checking for authorization");
-                if (reqHeaders.containsKey("Authorization")) {
-                    System.out.println("Authorization successful");
-                    String authToken = reqHeaders.getFirst("Authorization");
-                    System.out.println(authToken);
+                //if (reqHeaders.containsKey("Authorization")) {
+                    //System.out.println("Authorization successful");
+                    //String authToken = reqHeaders.getFirst("Authorization");
+                    //System.out.println(authToken);
                     //Get the request body
                     InputStream reqBody = exchange.getRequestBody();
                     String reqData = new String(reqBody.readAllBytes());
@@ -38,9 +38,9 @@ public class LoginHandler implements HttpHandler{
                     //if the auth token is valid
                     if (loginService.authTokenIsValid(username)) {
                         //System.out.println(authToken);
-                        String respData = gson.toJson(request);
                         //Send request and get response
                         LoginResult response = loginService.login(request);
+                        String respData = gson.toJson(response);
                         exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
                         OutputStream respBody = exchange.getResponseBody();
                         writeString(respData, respBody);
@@ -48,7 +48,7 @@ public class LoginHandler implements HttpHandler{
                         success = true;
                     }
                 }
-            }
+            //}
             if (!success) {
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
                 exchange.getResponseBody().close();

@@ -37,11 +37,7 @@ public class LoginService {
             //Create the login result
             String username = user.getUsername();
             String personID = user.getPersonID();
-            //TODO: make the success value accurate
-            boolean success = false;
-            //TODO: implement this functionality too
-            String message = "successful";
-            return new LoginResult(authToken.getAuthToken(), username, personID, success, message);
+            return new LoginResult(authToken.getAuthToken(), username, personID, true, "login successful");
         } catch (DataAccessException e) {
             e.printStackTrace();
             return null;
