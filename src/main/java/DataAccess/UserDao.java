@@ -107,8 +107,9 @@ public class UserDao {
             }
         } catch(SQLException e) {
             e.printStackTrace();
-            throw new DataAccessException("Error encountered while logging a user in the database");
+            throw new DataAccessException("Error encountered while logging a user into the database");
         }
+        //generate a new auth token
         UUID uuid = UUID.randomUUID();
         String authTokenValue = uuid.toString();
         AuthToken authToken = new AuthToken(authTokenValue, username);
@@ -119,7 +120,6 @@ public class UserDao {
         } catch (DataAccessException e) {
             e.printStackTrace();
         }
-
         return authToken;
     }
 

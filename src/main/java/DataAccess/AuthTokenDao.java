@@ -36,6 +36,7 @@ public class AuthTokenDao {
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, authToken.getAuthToken());
             stmt.setString(2, authToken.getUsername());
+            stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
             throw new DataAccessException("Error encountered while inserting an authtoken into the database");
