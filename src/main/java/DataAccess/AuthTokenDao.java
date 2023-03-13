@@ -32,7 +32,7 @@ public class AuthTokenDao {
      * @throws DataAccessException
      */
     public void insert(AuthToken authToken) throws DataAccessException{
-        String sql = "INSERT INTO Authtoken (authtoke, username) VALUES(?,?);";
+        String sql = "INSERT INTO Authtoken (authtoken, username) VALUES(?,?);";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, authToken.getAuthToken());
             stmt.setString(2, authToken.getUsername());
