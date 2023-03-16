@@ -68,4 +68,8 @@ public class AuthTokenDao {
     public List<AuthToken> GetAllAuthTokens() throws DataAccessException{
         return null;
     }
+
+    public void clear() {
+
+    }
 }

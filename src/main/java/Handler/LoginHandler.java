@@ -44,6 +44,8 @@ public class LoginHandler implements HttpHandler{
                         writeString(respData, respBody);
                         respBody.close();
                         success = true;
+                    } else {
+                        System.out.println("The user does not exist");
                     }
             }
             //}
