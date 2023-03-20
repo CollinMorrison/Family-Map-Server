@@ -20,10 +20,6 @@ public class LoginResult {
      * Whether the request was successful
      */
     private boolean success;
-    /**
-     * message associated with the request
-     */
-    private String message;
 
     /**
      * Constructor for a Login Result
@@ -31,13 +27,11 @@ public class LoginResult {
      * @param username
      * @param personID
      * @param success
-     * @param message
      */
-    public LoginResult(String authtoken, String username, String personID, boolean success, String message) {
+    public LoginResult(String authtoken, String username, String personID, boolean success) {
         this.authtoken = authtoken;
         this.username = username;
         this.personID = personID;
         this.success = success;
-        this.message = message;
     }
 }

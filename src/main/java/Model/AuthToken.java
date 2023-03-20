@@ -1,5 +1,7 @@
 package Model;
 
+import java.util.Objects;
+
 /**
  * Template for AuthToken entities as they appear in the database
  */
@@ -47,6 +49,9 @@ public class AuthToken {
      */
     @Override
     public boolean equals(Object o) {
-        return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AuthToken newAuthToken = (AuthToken) o;
+        return Objects.equals(authToken, newAuthToken.authToken) && Objects.equals(username, newAuthToken.username);
     }
 }

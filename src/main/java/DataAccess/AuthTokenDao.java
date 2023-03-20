@@ -5,7 +5,9 @@ import Model.AuthToken;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -49,7 +51,21 @@ public class AuthTokenDao {
      * @return AuthToken
      * @throws DataAccessException
      */
-    public AuthToken Find(String username) throws DataAccessException{
+    public AuthToken Find(String username) throws DataAccessException {
+        AuthToken authToken;
+        ResultSet rs;
+        String sql = "SELECT * FROM Authtoken WHERE username = ?;";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, username);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                authToken = new AuthToken(rs.getString("authtoken"), rs.getString("username"));
+                return authToken;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataAccessException("Error encountered while finding an authToken in the database");
+        }
         return null;
     }
 
@@ -58,7 +74,16 @@ public class AuthTokenDao {
      * @param username
      * @throws DataAccessException
      */
-    public void delete(String username) throws DataAccessException{}
+    public void delete(String username) throws DataAccessException{
+        String sql = "DELETE FROM Authtoken WHERE username = ?;";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, username);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataAccessException("Error encountered while deleting an authToken from the database");
+        }
+    }
 
     /**
      * Gets a list of all the AuthTokens in the database
@@ -66,10 +91,29 @@ public class AuthTokenDao {
      * @throws DataAccessException
      */
     public List<AuthToken> GetAllAuthTokens() throws DataAccessException{
-        return null;
+        List<AuthToken> allAuthTokens = new ArrayList<>();
+        ResultSet rs;
+        String sql = "SELECT * FROM Authtoken;";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                AuthToken authTokenToAdd = new AuthToken(rs.getString("authtoken"), rs.getString("username"));
+                allAuthTokens.add(authTokenToAdd);
+            }
+            return allAuthTokens;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataAccessException("Error encountered while getting all the authTokens");
+        }
     }
 
-    public void clear() {
-
+    public void clear() throws DataAccessException {
+        String sql = "DELETE FROM Authtoken";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataAccessException("Error encountered while clearing the Authtoken table");
+        }
     }
 }

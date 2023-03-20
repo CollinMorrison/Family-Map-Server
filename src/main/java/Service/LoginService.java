@@ -40,7 +40,7 @@ public class LoginService {
             //Create the login result
             String username = user.getUsername();
             String personID = user.getPersonID();
-            return new LoginResult(authToken.getAuthToken(), username, personID, true, "login successful");
+            return new LoginResult(authToken.getAuthToken(), username, personID, true);
         } catch (DataAccessException e) {
             e.printStackTrace();
             return null;
