@@ -4,11 +4,15 @@ import DataAccess.DataAccessException;
 import DataAccess.Database;
 import DataAccess.EventDao;
 import Model.Event;
+import Model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.xml.crypto.Data;
 import java.sql.Connection;
+import java.util.Calendar;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -74,5 +78,29 @@ public class EventDAOTest {
         // the "()->", and the assertThrows assertion expects the code that ran to throw an
         // instance of the class in the first parameter, which in this case is a DataAccessException.
         assertThrows(DataAccessException.class, () -> eDao.insert(bestEvent));
+    }
+
+    @Test
+    public void findPass() throws DataAccessException {
+        eDao.insert(bestEvent);
+        Event compareTest = eDao.find(bestEvent.getEventID());
+        assertNotNull(compareTest);
+        assertEquals(compareTest, bestEvent);
+    }
+
+    @Test
+    public void clearTest() throws DataAccessException {
+        eDao.insert(bestEvent);
+        eDao.clear();
+        Event undefinedEvent = eDao.find(bestEvent.getEventID());
+        assertNull(undefinedEvent);
+    }
+
+    @Test
+    public void findByUserPass() throws DataAccessException {
+        eDao.insert(bestEvent);
+        User userToPass = new User("Gale", "any", "any", "any", "any", "any" , "any");
+        List<Event> compareTest = eDao.FindByUser(userToPass);
+        assertEquals(1, compareTest.size());
     }
 }

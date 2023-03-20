@@ -4,6 +4,7 @@ import Model.Event;
 import Model.User;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -102,7 +103,30 @@ public class EventDao {
      * @param user
      * @return List of events
      */
-    public List<Event> FindByUser(User user) {
-        return null;
+    public List<Event> FindByUser(User user) throws DataAccessException {
+        List<Event> associatedEvents = new ArrayList<>();
+        String associatedUsername = user.getUsername();
+        ResultSet rs;
+        String sql = "SELECT * FROM Event WHERE associatedUsername = ?;";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, associatedUsername);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                Event eventToAdd = new Event(rs.getString("eventID"),
+                        rs.getString("associatedUsername"),
+                        rs.getString("personID"),
+                        rs.getFloat("latitude"),
+                        rs.getFloat("longitude"),
+                        rs.getString("country"),
+                        rs.getString("city"),
+                        rs.getString("eventType"),
+                        rs.getInt("year"));
+                associatedEvents.add(eventToAdd);
+            }
+            return associatedEvents;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataAccessException("Error encountered when getting a list of a user's event from the event table");
+        }
     }
 }
