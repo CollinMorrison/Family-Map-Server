@@ -69,7 +69,7 @@ public class UserDaoTest {
                 "otherEmail",
                 "otherFirstName",
                 "otherLastName",
-                "otherGender",
+                "m",
                 "otherPersonID"
         );
         uDao.insert(bestUser);

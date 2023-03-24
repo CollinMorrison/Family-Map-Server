@@ -81,7 +81,7 @@ public class PersonDaoTest {
                 "otherFatherID",
                 "otherMotherID",
                 "otherSpouseID",
-                "otherGender");
+                "m");
         pDao.Insert(bestPerson);
         pDao.Insert(secondPerson);
         List<Person> allPersons = pDao.GetAllPersons();
