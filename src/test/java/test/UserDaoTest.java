@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.xml.crypto.Data;
 import java.sql.Connection;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -58,6 +59,34 @@ public class UserDaoTest {
     public void findFail() throws DataAccessException {
         uDao.insert(bestUser);
         assertThrows(DataAccessException.class, () -> uDao.insert(bestUser));
+    }
+
+    @Test
+    public void getAllUsersPass() throws DataAccessException {
+        User secondUser = new User(
+                "otherUsername",
+                "otherPassword",
+                "otherEmail",
+                "otherFirstName",
+                "otherLastName",
+                "otherGender",
+                "otherPersonID"
+        );
+        uDao.insert(bestUser);
+        uDao.insert(secondUser);
+        List<User> allUsers = uDao.GetAllUsers();
+        assertNotNull(allUsers);
+        assertEquals(2, allUsers.size());
+    }
+
+    @Test
+    public void deletePass() throws DataAccessException {
+        uDao.insert(bestUser);
+        User compareTest = uDao.find(bestUser.getUsername());
+        assertEquals(compareTest, bestUser);
+        uDao.delete(bestUser);
+        compareTest = uDao.find(bestUser.getUsername());
+        assertNull(compareTest);
     }
 
     @Test

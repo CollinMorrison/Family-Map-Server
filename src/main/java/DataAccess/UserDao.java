@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -79,14 +80,44 @@ public class UserDao {
      * @param user
      * @throws DataAccessException
      */
-    public void delete(User user) throws DataAccessException {}
+    public void delete(User user) throws DataAccessException {
+        String sql = "DELETE FROM User WHERE username = ?;";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, user.getUsername());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataAccessException("Error encountered while deleting a user from the User table");
+        }
+    }
 
     /**
      * Returns a list of all the users in the database
      * @return List of users
      */
-    public List<User> GetAllUsers() {
-        return null;
+    public List<User> GetAllUsers() throws DataAccessException {
+        List<User> allUsers = new ArrayList<>();
+        ResultSet rs;
+        String sql = "SELECT * FROM User;";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                User userToAdd = new User(
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("email"),
+                        rs.getString("firstName"),
+                        rs.getString("lastName"),
+                        rs.getString("gender"),
+                        rs.getString("personID")
+                );
+                allUsers.add(userToAdd);
+            }
+            return allUsers;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataAccessException("Error getting the users from the User table");
+        }
     }
 
     /**
