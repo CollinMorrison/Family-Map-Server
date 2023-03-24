@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.xml.crypto.Data;
 import java.sql.Connection;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -59,6 +60,33 @@ public class PersonDaoTest {
     public void findFail() throws DataAccessException {
         pDao.Insert(bestPerson);
         assertThrows(DataAccessException.class, () -> pDao.Insert(bestPerson));
+    }
+
+    @Test
+    public void deletePass() throws DataAccessException {
+        pDao.Insert(bestPerson);
+        Person compareTest = pDao.Find(bestPerson.getPersonID());
+        assertEquals(compareTest, bestPerson);
+        pDao.delete(bestPerson.getPersonID());
+        compareTest = pDao.Find(bestPerson.getPersonID());
+        assertNull(compareTest);
+    }
+
+    @Test
+    public void getAllPersonsPass() throws DataAccessException {
+        Person secondPerson = new Person("otherPersonID",
+                "otherAssociatedUsername",
+                "other firstName",
+                "otherLastName",
+                "otherFatherID",
+                "otherMotherID",
+                "otherSpouseID",
+                "otherGender");
+        pDao.Insert(bestPerson);
+        pDao.Insert(secondPerson);
+        List<Person> allPersons = pDao.GetAllPersons();
+        assertNotNull(allPersons);
+        assertEquals(2, allPersons.size());
     }
 
     @Test

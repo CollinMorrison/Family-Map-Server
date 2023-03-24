@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -80,14 +81,43 @@ public class PersonDao {
      * @param personID
      * @throws DataAccessException
      */
-    public void delete (String personID) throws DataAccessException {}
+    public void delete (String personID) throws DataAccessException {
+        String sql = "DELETE FROM Person WHERE personID = ?;";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, personID);
+            stmt.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataAccessException("Error encountered while deleting a person from the Person table");
+        }
+    }
 
     /**
      * Returns a list of all the persons in the database
      * @return List of persons
      */
-    public List<Person> GetAllPersons() {
-        return null;
+    public List<Person> GetAllPersons() throws DataAccessException {
+        List<Person> allPersons = new ArrayList<>();
+        ResultSet rs;
+        String sql = "SELECT * FROM Person;";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                Person personToAdd = new Person(rs.getString("personID"),
+                        rs.getString("associatedUsername"),
+                        rs.getString("firstName"),
+                        rs.getString("lastName"),
+                        rs.getString("fatherID"),
+                        rs.getString("motherID"),
+                        rs.getString("spouseID"),
+                        rs.getString("gender"));
+                allPersons.add(personToAdd);
+            }
+            return allPersons;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataAccessException("Error encountered while getting all the Persons from the Person table");
+        }
     }
 
     /**
