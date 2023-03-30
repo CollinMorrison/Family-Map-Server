@@ -35,6 +35,10 @@ public class RegisterResult {
      * @param success
      */
     public RegisterResult(String authtoken, String username, String personID, boolean success, String message) {
-
+        this.authtoken = authtoken;
+        this.username = username;
+        this.personID = personID;
+        this.success = success;
+        this.message = message;
     }
 }

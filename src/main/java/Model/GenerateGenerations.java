@@ -14,7 +14,7 @@ public class GenerateGenerations {
     public GenerateGenerations (Connection conn) {
         this.conn = conn;
     }
-    public Person generatePerson(String gender, int generations, String username, String firstName, String lastName, int referenceYear) throws DataAccessException {
+    public Person generatePerson(String gender, int generations, String username, String firstName, String lastName, int referenceYear, String personID) throws DataAccessException {
         Serializer serializer = new Serializer();
         Location[] locations = serializer.loadLocations();
         String[] firstNames = serializer.loadFNames();
@@ -24,8 +24,8 @@ public class GenerateGenerations {
         Person father = null;
 
         if (generations > 1) {
-            mother = generatePerson("f", generations - 1, username, null, null, referenceYear - 13);
-            father = generatePerson("m", generations - 1, username, null, null, referenceYear - 13);
+            mother = generatePerson("f", generations - 1, username, null, null, referenceYear - 13, null);
+            father = generatePerson("m", generations - 1, username, null, null, referenceYear - 13, null);
             mother.setSpouseID(father.getPersonID());
             father.setSpouseID(mother.getPersonID());
             //add marriage events to mother and father that are in sync with each other
@@ -58,10 +58,8 @@ public class GenerateGenerations {
                 return newPerson;
             } else {
                 // create the person that corresponds to the user
-                UUID newPersonUUID = UUID.randomUUID();
-                String newPersonID = newPersonUUID.toString();
                 Person newPerson = new Person(
-                        newPersonID,
+                        personID,
                         username,
                         firstName,
                         lastName,
