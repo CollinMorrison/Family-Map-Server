@@ -4,10 +4,12 @@ import DataAccess.AuthTokenDao;
 import DataAccess.DataAccessException;
 import DataAccess.Database;
 import DataAccess.UserDao;
+import Model.GenerateGenerations;
 import Model.User;
 import Request.RegisterRequest;
 import Result.RegisterResult;
 
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -32,8 +34,12 @@ public class RegisterService {
             // Create a new user
             User newUser = new User(r.getUsername(), r.getPassword(), r.getEmail(), r.getFirstName(), r.getLastName(), r.getGender(), personID);
             // Generate 4 generations of ancestor data for the new user
+            //generate a number between 500 and 2000
+            int referenceYear = new Random().nextInt(1500) + 500;
+            GenerateGenerations generateGenerations = new GenerateGenerations(database.getConnection());
             // (just like the /fill endpoint if called with a generations value of 4
             // and this new user's username as parameters)
+            generateGenerations.generatePerson(r.getGender(), 4, r.getUsername(), r.getFirstName(), r.getLastName(), referenceYear);
             // Logs the user in
             // Returns an authToken
             return null;

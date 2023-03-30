@@ -56,7 +56,7 @@ public class EventDao {
     }
 
     /**
-     * Finds an event in the database based on it's ID
+     * Finds an event in the database based on its ID
      * @param eventID
      * @return
      * @throws DataAccessException
