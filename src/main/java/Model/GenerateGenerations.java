@@ -23,11 +23,15 @@ public class GenerateGenerations {
         Person mother = null;
         Person father = null;
 
-        if (generations > 1) {
+        if (generations >= 1) {
             mother = generatePerson("f", generations - 1, username, null, null, referenceYear - 13, null);
             father = generatePerson("m", generations - 1, username, null, null, referenceYear - 13, null);
             mother.setSpouseID(father.getPersonID());
             father.setSpouseID(mother.getPersonID());
+            //Save person in database
+            PersonDao personDao = new PersonDao(this.conn);
+            personDao.Insert(mother);
+            personDao.Insert(father);
             //add marriage events to mother and father that are in sync with each other
             generateMarriageEvents(mother, father, locations, referenceYear - 13);
             if (generations != 4) {
@@ -51,9 +55,6 @@ public class GenerateGenerations {
                 //generate events for the person (except marriage) and save them in database
                 generateBirthEvent(newPerson, referenceYear - 13, locations);
                 generateDeathEvent(newPerson, referenceYear + 1, locations);
-                //Save person in database
-                PersonDao personDao = new PersonDao(this.conn);
-                personDao.Insert(newPerson);
                 //return person
                 return newPerson;
             } else {
@@ -71,7 +72,6 @@ public class GenerateGenerations {
                 //generate events for the person (except marriage) and save them in database
                 generateBirthEvent(newPerson, referenceYear - 13, locations);
                 generateDeathEvent(newPerson, referenceYear + 1, locations);
-                PersonDao personDao = new PersonDao(this.conn);
                 personDao.Insert(newPerson);
                 return newPerson;
             }
@@ -97,9 +97,7 @@ public class GenerateGenerations {
             //generate events for the person (except marriage) and save them in database
             generateBirthEvent(newPerson, referenceYear - 13, locations);
             generateDeathEvent(newPerson, referenceYear + 1, locations);
-            //Save person in database
-            PersonDao personDao = new PersonDao(this.conn);
-            personDao.Insert(newPerson);
+
             //return person
             return newPerson;
         }
