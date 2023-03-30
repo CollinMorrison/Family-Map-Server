@@ -27,9 +27,9 @@ public class LoginService {
         //create the database connection
         Database database = new Database();
         try {
+            database.openConnection();
             //create the userDao and authTokenDao to interact with the database
             UserDao userDao = new UserDao(database.getConnection());
-            AuthTokenDao authTokenDao = new AuthTokenDao(database.getConnection());
             //Get the auth token associated with the username
             AuthToken authToken = userDao.Validate(r.getUsername(), r.getPassword());
             if (authToken == null) {
@@ -40,6 +40,7 @@ public class LoginService {
             //Create the login result
             String username = user.getUsername();
             String personID = user.getPersonID();
+            database.closeConnection(true);
             return new LoginResult(authToken.getAuthToken(), username, personID, true);
         } catch (DataAccessException e) {
             e.printStackTrace();

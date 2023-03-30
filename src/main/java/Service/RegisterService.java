@@ -10,6 +10,7 @@ import Model.User;
 import Request.RegisterRequest;
 import Result.RegisterResult;
 
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -25,7 +26,9 @@ public class RegisterService {
     public RegisterResult register(RegisterRequest r) {
         // Create the database connection
         Database database = new Database();
+
         try {
+            database.openConnection();
             // Create the userDao and authTokenDao to interact with the database
             UserDao userDao = new UserDao(database.getConnection());
             AuthTokenDao authTokenDao = new AuthTokenDao(database.getConnection());
@@ -54,6 +57,8 @@ public class RegisterService {
             // Save the all applicable data to the database
             authTokenDao.insert(newAuthToken);
             userDao.insert(newUser);
+            User verifyUser = userDao.find(newUser.getUsername());
+            database.closeConnection(true);
             // Returns the response
             return registerResult;
         } catch (DataAccessException e) {
