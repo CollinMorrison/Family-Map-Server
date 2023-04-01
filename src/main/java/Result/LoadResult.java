@@ -11,14 +11,15 @@ public class LoadResult {
     /**
      * Whether the request was successful
      */
-    private String success;
+    private Boolean success;
 
     /**
      * Constructor for the Load result
      * @param message
      * @param success
      */
-    public LoadResult(String message, String success) {
-
+    public LoadResult(String message, Boolean success) {
+        this.message = message;
+        this.success = success;
     }
 }
