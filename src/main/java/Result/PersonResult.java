@@ -21,6 +21,7 @@ public class PersonResult {
      * @param success
      */
     public PersonResult(Person[] data, boolean success) {
-
+        this.data = data;
+        this.success = success;
     }
 }
