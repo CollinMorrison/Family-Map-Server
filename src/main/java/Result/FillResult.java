@@ -19,6 +19,7 @@ public class FillResult {
      * @param success
      */
     public FillResult(String message, boolean success) {
-
+        this.message = message;
+        this.success = success;
     }
 }

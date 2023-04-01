@@ -43,7 +43,7 @@ public class RegisterService {
             GenerateGenerations generateGenerations = new GenerateGenerations(database.getConnection());
             // (just like the /fill endpoint if called with a generations value of 4
             // and this new user's username as parameters)
-            generateGenerations.generatePerson(r.getGender(), 4, r.getUsername(), r.getFirstName(), r.getLastName(), referenceYear, personID);
+            generateGenerations.generatePerson(r.getGender(), 4, r.getUsername(), r.getFirstName(), r.getLastName(), referenceYear, personID, 4);
             // Logs the user in, construct the register result
             UUID authUuid = UUID.randomUUID();
             AuthToken newAuthToken = new AuthToken(authUuid.toString(), newUser.getUsername());

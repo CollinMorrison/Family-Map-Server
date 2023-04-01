@@ -120,6 +120,31 @@ public class PersonDao {
         }
     }
 
+    public List<Person> GetAllPersons(String username) throws DataAccessException {
+        List<Person> allPersons = new ArrayList<>();
+        ResultSet rs;
+        String sql = "SELECT * FROM Person WHERE associatedUsername = ?;";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, username);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                Person personToAdd = new Person(rs.getString("personID"),
+                        rs.getString("associatedUsername"),
+                        rs.getString("firstName"),
+                        rs.getString("lastName"),
+                        rs.getString("fatherID"),
+                        rs.getString("motherID"),
+                        rs.getString("spouseID"),
+                        rs.getString("gender"));
+                allPersons.add(personToAdd);
+            }
+            return allPersons;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataAccessException("Error encountered while getting all the Persons from the Person table");
+        }
+    }
+
     /**
      * Clears all people from the database
      * @throws DataAccessException

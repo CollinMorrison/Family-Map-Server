@@ -11,10 +11,15 @@ import java.util.UUID;
 
 public class GenerateGenerations {
     private Connection conn;
+    private int numPeople;
+    private int numEvents;
     public GenerateGenerations (Connection conn) {
         this.conn = conn;
+        this.numPeople = 0;
+        this.numEvents = 0;
     }
-    public Person generatePerson(String gender, int generations, String username, String firstName, String lastName, int referenceYear, String personID) throws DataAccessException {
+
+    public Person generatePerson(String gender, int generations, String username, String firstName, String lastName, int referenceYear, String personID, int maxGenerations) throws DataAccessException {
         Serializer serializer = new Serializer();
         Location[] locations = serializer.loadLocations();
         String[] firstNames = serializer.loadFNames();
@@ -24,17 +29,19 @@ public class GenerateGenerations {
         Person father = null;
 
         if (generations >= 1) {
-            mother = generatePerson("f", generations - 1, username, null, null, referenceYear - 13, null);
-            father = generatePerson("m", generations - 1, username, null, null, referenceYear - 13, null);
+            mother = generatePerson("f", generations - 1, username, null, null, referenceYear - 13, null, maxGenerations);
+            father = generatePerson("m", generations - 1, username, null, null, referenceYear - 13, null, maxGenerations);
             mother.setSpouseID(father.getPersonID());
             father.setSpouseID(mother.getPersonID());
             //Save person in database
             PersonDao personDao = new PersonDao(this.conn);
             personDao.Insert(mother);
+            ++numPeople;
             personDao.Insert(father);
+            ++numPeople;
             //add marriage events to mother and father that are in sync with each other
             generateMarriageEvents(mother, father, locations, referenceYear - 13);
-            if (generations != 4) {
+            if (generations != maxGenerations) {
                 //create a new person that is not at the end of the tree
                 UUID newPersonUUID = UUID.randomUUID();
                 String newPersonID = newPersonUUID.toString();
@@ -73,6 +80,7 @@ public class GenerateGenerations {
                 generateBirthEvent(newPerson, referenceYear - 13, locations);
                 generateDeathEvent(newPerson, referenceYear + 1, locations);
                 personDao.Insert(newPerson);
+                ++numPeople;
                 return newPerson;
             }
         } else {
@@ -97,7 +105,6 @@ public class GenerateGenerations {
             //generate events for the person (except marriage) and save them in database
             generateBirthEvent(newPerson, referenceYear - 13, locations);
             generateDeathEvent(newPerson, referenceYear + 1, locations);
-
             //return person
             return newPerson;
         }
@@ -136,7 +143,9 @@ public class GenerateGenerations {
         // Add events to the database
         EventDao eventDao = new EventDao(this.conn);
         eventDao.insert(motherEvent);
+        ++numEvents;
         eventDao.insert(fatherEvent);
+        ++numEvents;
     }
 
     private void generateBirthEvent(Person person, int referenceYear, Location[] locations) throws DataAccessException {
@@ -158,6 +167,7 @@ public class GenerateGenerations {
         // Add event to the database
         EventDao eventDao = new EventDao(this.conn);
         eventDao.insert(birthEvent);
+        ++numEvents;
     }
 
     private void generateDeathEvent(Person person, int referenceYear, Location[] locations) throws DataAccessException {
@@ -179,5 +189,13 @@ public class GenerateGenerations {
         // Add event to the database
         EventDao eventDao = new EventDao(this.conn);
         eventDao.insert(deathEvent);
+        ++numEvents;
+    }
+
+    public int getNumEvents() {
+        return numEvents;
+    }
+    public int getNumPeople() {
+        return numPeople;
     }
 }
