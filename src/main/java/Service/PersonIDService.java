@@ -10,7 +10,7 @@ public class PersonIDService {
      * Handles the personID API call
      * @return PersonIDResult
      */
-    public PersonIDResult personID() {
+    public PersonIDResult personID(String authToken) {
         return null;
     }
 }

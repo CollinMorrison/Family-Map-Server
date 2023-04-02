@@ -16,24 +16,28 @@ public class PersonHandler implements HttpHandler{
         boolean success = false;
         try {
             if (exchange.getRequestMethod().toLowerCase().equals("get")) {
-                InputStream reqBody = exchange.getRequestBody();
-                String reqData = new String(reqBody.readAllBytes());
-                System.out.println(reqData);
-                PersonResult response = personService.person();
-                // if the response was valid
-                if (response != null) {
-                    String respData = gson.toJson(response);
-                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                    OutputStream respBody = exchange.getResponseBody();
-                    writeString(respData, respBody);
-                    respBody.close();
-                    success = true;
-                } else {
-                    System.out.println("The persons could not be obtained");
+                Headers reqHeaders = exchange.getRequestHeaders();
+                if (reqHeaders.containsKey("Authorization")) {
+                    String authToken = reqHeaders.getFirst("Authorization");
+                    InputStream reqBody = exchange.getRequestBody();
+                    String reqData = new String(reqBody.readAllBytes());
+                    System.out.println(reqData);
+                    PersonResult response = personService.person(authToken);
+                    // if the response was valid
+                    if (response != null) {
+                        String respData = gson.toJson(response);
+                        exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+                        OutputStream respBody = exchange.getResponseBody();
+                        writeString(respData, respBody);
+                        respBody.close();
+                        success = true;
+                    } else {
+                        System.out.println("The persons could not be retrieved");
+                    }
                 }
             }
             if (!success) {
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST,0);
+                exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
                 exchange.getResponseBody().close();
             }
         } catch (IOException e) {
