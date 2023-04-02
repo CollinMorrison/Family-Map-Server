@@ -59,6 +59,15 @@ public class EventIDResult {
      * @param success
      */
     public EventIDResult(String associatedUsername, String eventID, String personID, float latitude, float longitude, String country, String city, String eventType, int year, boolean success) {
-
+        this.associatedUsername = associatedUsername;
+        this.eventID = eventID;
+        this.personID = personID;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.country = country;
+        this.city = city;
+        this.eventType = eventType;
+        this.year = year;
+        this.success = success;
     }
 }
