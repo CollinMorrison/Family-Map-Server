@@ -120,6 +120,12 @@ public class PersonDao {
         }
     }
 
+    /**
+     * Retrieves all the people from the database associated with the provided username
+     * @param username
+     * @return
+     * @throws DataAccessException
+     */
     public List<Person> GetAllPersons(String username) throws DataAccessException {
         List<Person> allPersons = new ArrayList<>();
         ResultSet rs;

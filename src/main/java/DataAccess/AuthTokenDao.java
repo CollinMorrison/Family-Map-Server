@@ -69,6 +69,12 @@ public class AuthTokenDao {
         return null;
     }
 
+    /**
+     * Finds an authToken object by the authToken value
+     * @param authTokenString
+     * @return
+     * @throws DataAccessException
+     */
     public AuthToken FindByAuthtoken(String authTokenString) throws DataAccessException {
         AuthToken authToken;
         ResultSet rs;
@@ -125,6 +131,10 @@ public class AuthTokenDao {
         }
     }
 
+    /**
+     * Clears all data from the Authtoken table
+     * @throws DataAccessException
+     */
     public void clear() throws DataAccessException {
         String sql = "DELETE FROM Authtoken";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
