@@ -89,8 +89,23 @@ public class EventDAOTest {
     }
 
     @Test
-    public void clearTest() throws DataAccessException {
+    public void findPassTwo() throws DataAccessException {
         eDao.insert(bestEvent);
+        Event compareTest = eDao.find("badID");
+        assertNull(compareTest);
+        assertNotEquals(compareTest, bestEvent);
+    }
+
+    @Test
+    public void clearPass() throws DataAccessException {
+        eDao.insert(bestEvent);
+        eDao.clear();
+        Event undefinedEvent = eDao.find(bestEvent.getEventID());
+        assertNull(undefinedEvent);
+    }
+
+    @Test
+    public void clearPassTwo() throws DataAccessException {
         eDao.clear();
         Event undefinedEvent = eDao.find(bestEvent.getEventID());
         assertNull(undefinedEvent);
@@ -102,5 +117,13 @@ public class EventDAOTest {
         User userToPass = new User("Gale", "any", "any", "any", "any", "any" , "any");
         List<Event> compareTest = eDao.FindByUser(userToPass);
         assertEquals(1, compareTest.size());
+    }
+
+    @Test
+    public void findByUserPassTwo() throws DataAccessException {
+        eDao.insert(bestEvent);
+        User userToPass = new User("badUsername", "any", "any", "any", "any", "any" , "any");
+        List<Event> compareEventList = eDao.FindByUser(userToPass);
+        assertEquals(0, compareEventList.size());
     }
 }
