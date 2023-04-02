@@ -21,6 +21,7 @@ public class EventResult {
      * @param success
      */
     public EventResult(Event[] data, boolean success) {
-
+        this.data = data;
+        this.success = success;
     }
 }
