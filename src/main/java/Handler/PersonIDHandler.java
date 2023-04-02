@@ -23,7 +23,12 @@ public class PersonIDHandler implements HttpHandler{
                     InputStream reqBody = exchange.getRequestBody();
                     String reqData = new String(reqBody.readAllBytes());
                     System.out.println(reqData);
-                    PersonIDResult response = personIDService.personID(authToken);
+                    // Get personID from the path
+                    URI uri = exchange.getRequestURI();
+                    String path = uri.getPath();
+                    String[] variables = path.split("/");
+                    String personID = variables[2];
+                    PersonIDResult response = personIDService.personID(authToken, personID);
                     // if the response was valid
                     if (response != null) {
                         String respData = gson.toJson(response);

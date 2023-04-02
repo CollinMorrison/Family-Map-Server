@@ -31,8 +31,9 @@ public class PersonService {
             if (user == null) {
                 return null;
             }
+            // Get the list of people associated with the valid user
             PersonDao personDao = new PersonDao(database.getConnection());
-            Person[] persons = personDao.GetAllPersons().toArray(new Person[0]);
+            Person[] persons = personDao.GetAllPersons(user.getUsername()).toArray(new Person[0]);
             // Construct the response
             PersonResult response = new PersonResult(persons, true);
             database.closeConnection(true);
