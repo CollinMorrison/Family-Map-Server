@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.xml.crypto.Data;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -56,9 +57,27 @@ public class AuthTokenDaoTest {
     }
 
     @Test
-    public void findFail() throws DataAccessException {
+    public void findPassTwo() throws DataAccessException {
         authTokenDao.insert(bestAuthToken);
-        assertThrows(DataAccessException.class, () -> authTokenDao.insert(bestAuthToken));
+        AuthToken compareTest = authTokenDao.Find("badUsername");
+        assertNull(compareTest);
+        assertNotEquals(bestAuthToken, compareTest);
+    }
+
+    @Test
+    public void findByAuthTokenPass() throws DataAccessException {
+        authTokenDao.insert(bestAuthToken);
+        AuthToken compareTest = authTokenDao.FindByAuthtoken("randomString");
+        assertNotNull(compareTest);
+        assertEquals(bestAuthToken, compareTest);
+    }
+
+    @Test
+    public void findByAuthTokenPassTwo() throws DataAccessException {
+        authTokenDao.insert(bestAuthToken);
+        AuthToken compareTest = authTokenDao.FindByAuthtoken("badToken");
+        assertNull(compareTest);
+        assertNotEquals(bestAuthToken, compareTest);
     }
 
     @Test
@@ -69,6 +88,12 @@ public class AuthTokenDaoTest {
         List<AuthToken> allAuthTokens = authTokenDao.GetAllAuthTokens();
         assertNotNull(allAuthTokens);
         assertEquals(2, allAuthTokens.size());
+    }
+
+    @Test void getAllTokensPassTwo() throws DataAccessException {
+        List<AuthToken> allAuthTokens = authTokenDao.GetAllAuthTokens();
+        List<AuthToken> emptyList = new ArrayList<>();
+        assertEquals(allAuthTokens, emptyList);
     }
 
     @Test
@@ -82,8 +107,29 @@ public class AuthTokenDaoTest {
     }
 
     @Test
-    public void clearTest() throws DataAccessException {
+    public void deletePassTwo() throws DataAccessException {
         authTokenDao.insert(bestAuthToken);
+        AuthToken secondAuthToken = new AuthToken("otherAuthToken", "otherUsername");
+        authTokenDao.insert(secondAuthToken);
+        AuthToken compareTest = authTokenDao.Find(bestAuthToken.getUsername());
+        assertEquals(compareTest, bestAuthToken);
+        authTokenDao.delete(bestAuthToken.getUsername());
+        compareTest = authTokenDao.Find(bestAuthToken.getUsername());
+        assertNull(compareTest);
+        compareTest = authTokenDao.Find(secondAuthToken.getUsername());
+        assertEquals(compareTest, secondAuthToken);
+    }
+
+    @Test
+    public void clearPass() throws DataAccessException {
+        authTokenDao.insert(bestAuthToken);
+        authTokenDao.clear();
+        AuthToken undefinedAuthToken = authTokenDao.Find(bestAuthToken.getUsername());
+        assertNull(undefinedAuthToken);
+    }
+
+    @Test
+    public void clearPassTwo() throws DataAccessException {
         authTokenDao.clear();
         AuthToken undefinedAuthToken = authTokenDao.Find(bestAuthToken.getUsername());
         assertNull(undefinedAuthToken);
