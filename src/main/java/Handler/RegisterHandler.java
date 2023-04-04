@@ -17,6 +17,7 @@ public class RegisterHandler implements HttpHandler{
     public void handle(HttpExchange exchange) throws IOException {
         Gson gson = new Gson();
         RegisterService registerService = new RegisterService();
+        RegisterResult response;
         boolean success = false;
         try {
             if (exchange.getRequestMethod().toLowerCase().equals("post")) {
@@ -25,30 +26,43 @@ public class RegisterHandler implements HttpHandler{
                 System.out.println(reqData);
                 // construct a register request
                 JsonObject reqObject = gson.fromJson(reqData, JsonObject.class);
-                String username = reqObject.get("username").getAsString();
-                String password = reqObject.get("password").getAsString();
-                String email = reqObject.get("email").getAsString();
-                String firstName = reqObject.get("firstName").getAsString();
-                String lastName = reqObject.get("lastName").getAsString();
-                String gender = reqObject.get("gender").getAsString();
-                RegisterRequest request = new RegisterRequest(username, password, email, firstName, lastName, gender);
-                // Send request and get response
-                RegisterResult response = registerService.register(request);
-                // if the response was valid
-                if (response != null) {
-                    String respData = gson.toJson(response);
-                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                    OutputStream respBody = exchange.getResponseBody();
-                    writeString(respData, respBody);
-                    respBody.close();
-                    success = true;
+                // If there is a property missing from the request
+                if (
+                        !reqObject.has("username") ||
+                        !reqObject.has("password") ||
+                        !reqObject.has("email") ||
+                        !reqObject.has("firstName") ||
+                        !reqObject.has("lastName") ||
+                        !reqObject.has("gender")
+                ) {
+                    response = new RegisterResult(
+                            null,
+                            null,
+                            null,
+                            false,
+                            "Error: There is a missing property in the request"
+                    );
                 } else {
-                    System.out.println("The user could not be registered");
+                    String username = reqObject.get("username").getAsString();
+                    String password = reqObject.get("password").getAsString();
+                    String email = reqObject.get("email").getAsString();
+                    String firstName = reqObject.get("firstName").getAsString();
+                    String lastName = reqObject.get("lastName").getAsString();
+                    String gender = reqObject.get("gender").getAsString();
+                    RegisterRequest request = new RegisterRequest(username, password, email, firstName, lastName, gender);
+                    // Send request and get response
+                    response = registerService.register(request);
+                    success = true;
                 }
-            }
-            if (!success) {
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
-                exchange.getResponseBody().close();
+                String respData = gson.toJson(response);
+                if (!response.isSuccess()) {
+                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+                } else {
+                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+                }
+                OutputStream respBody = exchange.getResponseBody();
+                writeString(respData, respBody);
+                respBody.close();
             }
         } catch (IOException e) {
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_SERVER_ERROR, 0);

@@ -27,6 +27,10 @@ public class RegisterResult {
      */
     private String message;
 
+    public boolean isSuccess() {
+        return success;
+    }
+
     /**
      * Constructor for the Register Result
      * @param authtoken

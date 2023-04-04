@@ -10,6 +10,7 @@ import Model.User;
 import Request.RegisterRequest;
 import Result.RegisterResult;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -32,6 +33,15 @@ public class RegisterService {
             // Create the userDao and authTokenDao to interact with the database
             UserDao userDao = new UserDao(database.getConnection());
             AuthTokenDao authTokenDao = new AuthTokenDao(database.getConnection());
+            // Check for errors
+            // Request property missing or has invalid value
+            if (!(r.getGender().equals("m") || r.getGender().equals("f"))) {
+                throw new Exception("Gender must be m or f");
+            }
+            // Username already taken by another user
+            if (userDao.find(r.getUsername()) != null) {
+                throw new Exception("That username is already taken");
+            }
             // Get personID for new user
             UUID uuid = UUID.randomUUID();
             String personID = uuid.toString();
@@ -61,9 +71,16 @@ public class RegisterService {
             database.closeConnection(true);
             // Returns the response
             return registerResult;
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
+            database.closeConnection(false);
             e.printStackTrace();
-            return null;
+            return new RegisterResult(
+                    null,
+                    null,
+                    null,
+                    false,
+                    "Error: " + e.getMessage()
+                    );
         }
     }
 }
