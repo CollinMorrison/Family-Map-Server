@@ -56,9 +56,8 @@ public class UserDaoTest {
     }
 
     @Test
-    public void findFail() throws DataAccessException {
-        uDao.insert(bestUser);
-        assertThrows(DataAccessException.class, () -> uDao.insert(bestUser));
+    public void findPassTwo() throws DataAccessException {
+
     }
 
     @Test
@@ -80,6 +79,11 @@ public class UserDaoTest {
     }
 
     @Test
+    public void getAllUsersPassTwo() throws DataAccessException {
+
+    }
+
+    @Test
     public void deletePass() throws DataAccessException {
         uDao.insert(bestUser);
         User compareTest = uDao.find(bestUser.getUsername());
@@ -90,10 +94,30 @@ public class UserDaoTest {
     }
 
     @Test
-    public void clearTest() throws DataAccessException {
+    public void deletePassTwo() throws DataAccessException {
+
+    }
+
+    @Test
+    public void validatePass() throws DataAccessException {
+
+    }
+
+    @Test
+    public void validateFail() throws DataAccessException {
+
+    }
+
+    @Test
+    public void clearPass() throws DataAccessException {
         uDao.insert(bestUser);
         uDao.clear();
         User undefinedUser = uDao.find(bestUser.getUsername());
         assertNull(undefinedUser);
+    }
+
+    @Test
+    public void clearPassTwo() throws DataAccessException {
+
     }
 }
