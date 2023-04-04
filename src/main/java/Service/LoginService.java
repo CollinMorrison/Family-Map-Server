@@ -34,20 +34,25 @@ public class LoginService {
             //Get the auth token associated with the username
             AuthToken authToken = userDao.Validate(r.getUsername(), r.getPassword());
             if (authToken == null) {
-                return null;
+                throw new Exception("Invalid username or password");
             }
             //get the user associated with the username
             User user = userDao.find(r.getUsername());
             //Create the login result
             String username = user.getUsername();
             String personID = user.getPersonID();
-            // Save the Auth Token to the database
-            authTokenDao.insert(authToken);
             database.closeConnection(true);
-            return new LoginResult(authToken.getAuthToken(), username, personID, true);
-        } catch (DataAccessException e) {
+            return new LoginResult(authToken.getAuthToken(), username, personID, true, null);
+        } catch (Exception e) {
+            database.closeConnection(false);
             e.printStackTrace();
-            return null;
+            return new LoginResult(
+                    null,
+                    null,
+                    null,
+                    false,
+                    "Error: " + e.getMessage()
+            );
         }
     }
 

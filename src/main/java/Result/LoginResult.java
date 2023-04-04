@@ -16,10 +16,17 @@ public class LoginResult {
      * The personID associated with the person logging in
      */
     private String personID;
+
+    public boolean isSuccess() {
+        return success;
+    }
+
     /**
      * Whether the request was successful
      */
     private boolean success;
+
+    private String message;
 
     /**
      * Constructor for a Login Result
@@ -28,10 +35,11 @@ public class LoginResult {
      * @param personID
      * @param success
      */
-    public LoginResult(String authtoken, String username, String personID, boolean success) {
+    public LoginResult(String authtoken, String username, String personID, boolean success, String message) {
         this.authtoken = authtoken;
         this.username = username;
         this.personID = personID;
         this.success = success;
+        this.message = message;
     }
 }

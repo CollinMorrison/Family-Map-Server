@@ -14,49 +14,57 @@ public class LoginHandler implements HttpHandler{
         //System.out.println("In login handler");
         Gson gson = new Gson();
         LoginService loginService = new LoginService();
+        LoginResult response;
         boolean success = false;
         try {
             if (exchange.getRequestMethod().toLowerCase().equals("post")) {
-                //System.out.println("in if block");
-                //Headers reqHeaders = exchange.getRequestHeaders();
-                //System.out.println("Checking for authorization");
-                //if (reqHeaders.containsKey("Authorization")) {
-                    //System.out.println("Authorization successful");
-                    //String authToken = reqHeaders.getFirst("Authorization");
-                    //System.out.println(authToken);
-                    //Get the request body
-                    InputStream reqBody = exchange.getRequestBody();
-                    String reqData = new String(reqBody.readAllBytes());
-                    System.out.println(reqData);
-                    //construct a login request
-                    JsonObject reqObject = gson.fromJson(reqData, JsonObject.class);
+                //Get the request body
+                InputStream reqBody = exchange.getRequestBody();
+                String reqData = new String(reqBody.readAllBytes());
+                System.out.println(reqData);
+                //construct a login request
+                // If there is a property missing from the request
+                JsonObject reqObject = gson.fromJson(reqData, JsonObject.class);
+                if (!reqObject.has("username") || !reqObject.has("password")) {
+                    response = new LoginResult(
+                            null,
+                            null,
+                            null,
+                            false,
+                            "Error: A username or password is missing"
+                    );
+                } else {
                     String username = reqObject.get("username").getAsString();
                     String password = reqObject.get("password").getAsString();
-                    System.out.println(username + " " + password);
                     LoginRequest request = new LoginRequest(username, password);
                     //Send request and get response
-                    LoginResult response = loginService.login(request);
-                    //if the response was valid
-                    if (response != null) {
-                        String respData = gson.toJson(response);
-                        exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                        OutputStream respBody = exchange.getResponseBody();
-                        writeString(respData, respBody);
-                        respBody.close();
-                        success = true;
-                    } else {
-                        System.out.println("The user does not exist");
-                    }
-            }
-            //}
-            if (!success) {
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
-                exchange.getResponseBody().close();
+                    response = loginService.login(request);
+                    success = true;
+                }
+                String respData = gson.toJson(response);
+                if (!response.isSuccess()) {
+                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+                } else {
+                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+                }
+                OutputStream respBody = exchange.getResponseBody();
+                writeString(respData, respBody);
+                respBody.close();
             }
         } catch (IOException e) {
-            exchange.sendResponseHeaders(HttpURLConnection.HTTP_SERVER_ERROR, 0);
-            exchange.getResponseBody().close();
             e.printStackTrace();
+            response = new LoginResult(
+                    null,
+                    null,
+                    null,
+                    false,
+                    "Error: Internal Server Error"
+            );
+            String respData = gson.toJson(response);
+            exchange.sendResponseHeaders(HttpURLConnection.HTTP_SERVER_ERROR, 0);
+            OutputStream respBody = exchange.getResponseBody();
+            writeString(respData, respBody);
+            respBody.close();
         }
     }
 
