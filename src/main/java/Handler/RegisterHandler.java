@@ -65,9 +65,19 @@ public class RegisterHandler implements HttpHandler{
                 respBody.close();
             }
         } catch (IOException e) {
-            exchange.sendResponseHeaders(HttpURLConnection.HTTP_SERVER_ERROR, 0);
-            exchange.getResponseBody().close();
             e.printStackTrace();
+            response = new RegisterResult(
+                    null,
+                    null,
+                    null,
+                    false,
+                    "Error: Internal Server Error"
+            );
+            String respData = gson.toJson(response);
+            exchange.sendResponseHeaders(HttpURLConnection.HTTP_SERVER_ERROR, 0);
+            OutputStream respBody = exchange.getResponseBody();
+            writeString(respData, respBody);
+            respBody.close();
         }
     }
 
