@@ -3,6 +3,7 @@ package test;
 import DataAccess.DataAccessException;
 import DataAccess.Database;
 import DataAccess.UserDao;
+import Model.AuthToken;
 import Model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.xml.crypto.Data;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -57,7 +59,10 @@ public class UserDaoTest {
 
     @Test
     public void findPassTwo() throws DataAccessException {
-
+        uDao.insert(bestUser);
+        User compareTest = uDao.find("badUsername");
+        assertNull(compareTest);
+        assertNotEquals(bestUser, compareTest);
     }
 
     @Test
@@ -80,7 +85,9 @@ public class UserDaoTest {
 
     @Test
     public void getAllUsersPassTwo() throws DataAccessException {
-
+        List<User> allUsers = uDao.GetAllUsers();
+        List<User> emptyList = new ArrayList<>();
+        assertEquals(allUsers, emptyList);
     }
 
     @Test
@@ -95,17 +102,37 @@ public class UserDaoTest {
 
     @Test
     public void deletePassTwo() throws DataAccessException {
-
+        uDao.insert(bestUser);
+        User secondUser = new User(
+                "otherUsername",
+                "otherPassword",
+                "otherEmail",
+                "otherFirstName",
+                "otherLastName",
+                "m",
+                "otherPersonID"
+        );
+        uDao.insert(secondUser);
+        User compareTest = uDao.find(bestUser.getUsername());
+        assertEquals(compareTest, bestUser);
+        uDao.delete(bestUser);
+        compareTest = uDao.find(bestUser.getUsername());
+        assertNull(compareTest);
+        compareTest = uDao.find(secondUser.getUsername());
+        assertEquals(compareTest, secondUser);
     }
 
     @Test
     public void validatePass() throws DataAccessException {
-
+        uDao.insert(bestUser);
+        AuthToken result = uDao.Validate(bestUser.getUsername(), bestUser.getPassword());
+        assertNotNull(result);
     }
 
     @Test
     public void validateFail() throws DataAccessException {
-
+        AuthToken result = uDao.Validate(bestUser.getUsername(), bestUser.getPassword());
+        assertNull(result);
     }
 
     @Test
@@ -118,6 +145,8 @@ public class UserDaoTest {
 
     @Test
     public void clearPassTwo() throws DataAccessException {
-
+        uDao.clear();
+        User undefinedUser = uDao.find(bestUser.getUsername());
+        assertNull(undefinedUser);
     }
 }
