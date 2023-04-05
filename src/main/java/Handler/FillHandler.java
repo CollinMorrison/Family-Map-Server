@@ -15,6 +15,7 @@ public class FillHandler implements HttpHandler{
         Gson gson = new Gson();
         FillService fillService = new FillService();
         boolean success = false;
+        FillResult response;
         try {
             if (exchange.getRequestMethod().toLowerCase().equals("post")) {
                 URI uri = exchange.getRequestURI();
@@ -27,25 +28,32 @@ public class FillHandler implements HttpHandler{
                 if (variables.length == 4) {
                     generations = Integer.parseInt(variables[3]);
                 }
-                FillResult response = fillService.fill(generations, username);
+                response = fillService.fill(generations, username);
+                String respData = gson.toJson(response);
                 // If the response was valid
-                if (response != null) {
-                    String respData = gson.toJson(response);
+                if (response.isSuccess()) {
                     exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                    OutputStream respBody = exchange.getResponseBody();
-                    writeString(respData, respBody);
-                    respBody.close();
                     success = true;
+                } else if (response.getMessage() == "Error: Internal Server Error"){
+                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_SERVER_ERROR, 0);
+                } else {
+                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
                 }
-            }
-            if (!success) {
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
-                exchange.getResponseBody().close();
+                OutputStream respBody = exchange.getResponseBody();
+                writeString(respData, respBody);
+                respBody.close();
             }
         } catch (IOException e) {
-            exchange.sendResponseHeaders(HttpURLConnection.HTTP_SERVER_ERROR, 0);
-            exchange.getResponseBody().close();
             e.printStackTrace();
+            exchange.sendResponseHeaders(HttpURLConnection.HTTP_SERVER_ERROR, 0);
+            response = new FillResult(
+                    "Error: Internal Server Error",
+                    false
+            );
+            OutputStream respBody = exchange.getResponseBody();
+            String respData = gson.toJson(response);
+            writeString(respData, respBody);
+            respBody.close();
         }
     }
 

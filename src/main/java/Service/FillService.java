@@ -22,6 +22,12 @@ public class FillService {
      * @return FillResult
      */
     public FillResult fill(int generations, String username) {
+        if (generations < 0) {
+            return new FillResult(
+                    "Error: Invalid generations value.",
+                    false
+            );
+        }
         // Create the database connection
         Database database = new Database();
         try {
@@ -32,8 +38,10 @@ public class FillService {
             // Get user associated with the username passed in
             User user = userDao.find(username);
             if (user == null) {
-                System.out.println("User does not exist");
-                return null;
+                return new FillResult(
+                        "Error: Invalid username",
+                        false
+                );
             }
             // Check if there is data already associated with that user. If there is, delete it
             List<Person> associatedPersons = personDao.GetAllPersons(username);
@@ -72,7 +80,10 @@ public class FillService {
             return response;
         } catch (DataAccessException e) {
             e.printStackTrace();
-            return null;
+            return new FillResult(
+                    "Error: Internal Server Error",
+                    false
+            );
         }
     }
 }
