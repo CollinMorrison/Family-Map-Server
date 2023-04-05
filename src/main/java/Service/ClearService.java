@@ -38,7 +38,7 @@ public class ClearService {
             return clearResult;
         } catch (DataAccessException e) {
             e.printStackTrace();
-            return null;
+            return new ClearResult("Error: Internal Server Error", false);
         }
     }
 }

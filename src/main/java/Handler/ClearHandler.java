@@ -12,25 +12,30 @@ public class ClearHandler implements HttpHandler{
     public void handle(HttpExchange exchange) throws IOException {
         Gson gson = new Gson();
         ClearService clearService = new ClearService();
+        ClearResult response;
         boolean success = false;
         try {
             if (exchange.getRequestMethod().toLowerCase().equals("post")) {
-                ClearResult response = clearService.clear();
-                if (response != null) {
-                    String respData = gson.toJson(response);
+                response = clearService.clear();
+                String respData = gson.toJson(response);
+                if (response.isSuccess()) {
                     exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                    OutputStream respBody = exchange.getResponseBody();
-                    writeString(respData, respBody);
-                    respBody.close();
                     success = true;
                 } else {
-                    System.out.println("Error encountered while clearing");
+                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_SERVER_ERROR, 0);
                 }
+                OutputStream respBody = exchange.getResponseBody();
+                writeString(respData, respBody);
+                respBody.close();
             }
         } catch (IOException e) {
-            exchange.sendResponseHeaders(HttpURLConnection.HTTP_SERVER_ERROR, 0);
-            exchange.getResponseBody().close();
             e.printStackTrace();
+            response = new ClearResult("Error: Internal Server Error", false);
+            String respData = gson.toJson(response);
+            exchange.sendResponseHeaders(HttpURLConnection.HTTP_SERVER_ERROR, 0);
+            OutputStream respBody = exchange.getResponseBody();
+            writeString(respData, respBody);
+            respBody.close();
         }
     }
 
