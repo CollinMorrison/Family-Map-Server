@@ -23,23 +23,23 @@ public class EventIDService {
             AuthTokenDao authTokenDao = new AuthTokenDao(database.getConnection());
             AuthToken authTokenObject = authTokenDao.FindByAuthtoken(authToken);
             if (authTokenObject == null) {
-                database.closeConnection(false);
-                return null;
+                throw new Exception("Invalid AuthToken");
             }
             String username = authTokenObject.getUsername();
             UserDao userDao = new UserDao(database.getConnection());
             User user = userDao.find(username);
             if (user == null) {
-                database.closeConnection(false);
-                return null;
+                throw new Exception("Invalid AuthToken");
             }
             // Get the event with the eventID
             EventDao eventDao = new EventDao(database.getConnection());
             Event event = eventDao.find(eventID);
+            if (event == null) {
+                throw new Exception("Invalid eventID");
+            }
             // Make sure the event is associated with the right user
             if (!event.getAssociatedUsername().equals(user.getUsername())) {
-                database.closeConnection(false);
-                return null;
+                throw new Exception("Requested event does not belong to this user");
             }
             // Construct the response
             EventIDResult response = new EventIDResult(
@@ -52,14 +52,27 @@ public class EventIDService {
                     event.getCity(),
                     event.getEventType(),
                     event.getYear(),
-                    true
+                    true,
+                    null
             );
             database.closeConnection(true);
             return response;
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             database.closeConnection(false);
             e.printStackTrace();
-            return null;
+            return new EventIDResult(
+                    null,
+                    null,
+                    null,
+                    Float.NaN,
+                    Float.NaN,
+                    null,
+                    null,
+                    null,
+                    Integer.MIN_VALUE,
+                    false,
+                    "Error: " + e.getMessage()
+            );
         }
     }
 }

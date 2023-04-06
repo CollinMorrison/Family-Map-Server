@@ -12,6 +12,7 @@ public class EventIDHandler implements HttpHandler{
     public void handle(HttpExchange exchange) throws IOException {
         Gson gson = new Gson();
         EventIDService eventIDService = new EventIDService();
+        EventIDResult response;
         boolean success = false;
         try {
             if (exchange.getRequestMethod().toLowerCase().equals("get")) {
@@ -27,28 +28,62 @@ public class EventIDHandler implements HttpHandler{
                     String path = uri.getPath();
                     String[] variables = path.split("/");
                     String eventID = variables[2];
-                    EventIDResult response = eventIDService.eventID(authToken, eventID);
+                    response = eventIDService.eventID(authToken, eventID);
+                    String respData = gson.toJson(response);
                     // if the response was valid
-                    if (response != null) {
-                        String respData = gson.toJson(response);
+                    if (response.isSuccess()) {
                         exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                        OutputStream respBody = exchange.getResponseBody();
-                        writeString(respData, respBody);
-                        respBody.close();
                         success = true;
+                    } else if (response.getMessage() == "Error: Invalid AuthToken"
+                    || response.getMessage() == "Error: Invalid eventID"
+                    || response.getMessage() == "Error: Requested event does not belong to this user"){
+                        exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
                     } else {
-                        System.out.println("The event could not be retrieved");
+                        exchange.sendResponseHeaders(HttpURLConnection.HTTP_SERVER_ERROR, 0);
                     }
+                    OutputStream respBody = exchange.getResponseBody();
+                    writeString(respData, respBody);
+                    respBody.close();
+                } else {
+                    response = new EventIDResult(
+                            null,
+                            null,
+                            null,
+                            Float.NaN,
+                            Float.NaN,
+                            null,
+                            null,
+                            null,
+                            Integer.MIN_VALUE,
+                            false,
+                            "Error: An authorization token is required"
+                    );
+                    String respData = gson.toJson(response);
+                    OutputStream respBody = exchange.getResponseBody();
+                    writeString(respData, respBody);
+                    respBody.close();
                 }
             }
-            if (!success) {
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
-                exchange.getResponseBody().close();
-            }
         } catch (IOException e) {
-            exchange.sendResponseHeaders(HttpURLConnection.HTTP_SERVER_ERROR, 0);
-            exchange.getResponseBody().close();
             e.printStackTrace();
+            exchange.sendResponseHeaders(HttpURLConnection.HTTP_SERVER_ERROR, 0);
+            response = new EventIDResult(
+                    null,
+                    null,
+                    null,
+                    Float.NaN,
+                    Float.NaN,
+                    null,
+                    null,
+                    null,
+                    Integer.MIN_VALUE,
+                    false,
+                    "Error: Internal Server Error"
+            );
+            String respData = gson.toJson(response);
+            OutputStream respBody = exchange.getResponseBody();
+            writeString(respData, respBody);
+            respBody.close();
         }
     }
 

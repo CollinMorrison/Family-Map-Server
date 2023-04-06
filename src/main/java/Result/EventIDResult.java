@@ -45,6 +45,8 @@ public class EventIDResult {
      */
     private boolean success;
 
+    private String message;
+
     /**
      * Constructor for the EventID response
      * @param associatedUsername
@@ -58,7 +60,7 @@ public class EventIDResult {
      * @param year
      * @param success
      */
-    public EventIDResult(String associatedUsername, String eventID, String personID, float latitude, float longitude, String country, String city, String eventType, int year, boolean success) {
+    public EventIDResult(String associatedUsername, String eventID, String personID, float latitude, float longitude, String country, String city, String eventType, int year, boolean success, String message) {
         this.associatedUsername = associatedUsername;
         this.eventID = eventID;
         this.personID = personID;
@@ -69,5 +71,14 @@ public class EventIDResult {
         this.eventType = eventType;
         this.year = year;
         this.success = success;
+        this.message = message;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }
