@@ -81,28 +81,4 @@ public class EventIDResult {
     public String getMessage() {
         return message;
     }
-
-    public float getLatitude() {
-        return latitude;
-    }
-
-    public float getLongitude() {
-        return longitude;
-    }
-
-    public int getYear() {
-        return year;
-    }
-
-    public void setLatitude(Float latitude) {
-        this.latitude = latitude;
-    }
-
-    public void setLongitude(float longitude) {
-        this.longitude = longitude;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
-    }
 }
