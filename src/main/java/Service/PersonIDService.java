@@ -26,71 +26,23 @@ public class PersonIDService {
             AuthTokenDao authTokenDao = new AuthTokenDao(database.getConnection());
             AuthToken authTokenObject = authTokenDao.FindByAuthtoken(authToken);
             if (authTokenObject == null) {
-                database.closeConnection(false);
-                return new PersonIDResult(
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        false,
-                        "Error: Invalid AuthToken"
-                );
+                throw new Exception("Invalid AuthToken");
             }
             String username = authTokenObject.getUsername();
             UserDao userDao = new UserDao(database.getConnection());
             User user = userDao.find(username);
             if (user == null) {
-                database.closeConnection(false);
-                return new PersonIDResult(
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        false,
-                        "Error: Invalid AuthToken"
-                );
+                throw new Exception("Invalid AuthToken");
             }
             // Get the person with the personID
             PersonDao personDao = new PersonDao(database.getConnection());
             Person person = personDao.Find(personID);
             if (person == null) {
-                database.closeConnection(false);
-                return new PersonIDResult(
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        false,
-                        "Error: Invalid personID"
-                );
+                throw new Exception("Invalid personID");
             }
             // Make sure the person is associated with the right user
             if (!person.getAssociatedUsername().equals(user.getUsername())) {
-                database.closeConnection(false);
-                return new PersonIDResult(
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        false,
-                        "Error: The person is not associated with this user"
-                );
+                throw new Exception("The person is not associated with this user");
             }
             // Construct the response
             PersonIDResult response = new PersonIDResult(
@@ -107,10 +59,21 @@ public class PersonIDService {
             );
             database.closeConnection(true);
             return response;
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             database.closeConnection(false);
             e.printStackTrace();
-            return null;
+            return new PersonIDResult(
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    false,
+                    "Error: " + e.getMessage()
+            );
         }
     }
 }

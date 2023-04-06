@@ -22,27 +22,20 @@ public class FillService {
      * @return FillResult
      */
     public FillResult fill(int generations, String username) {
-        if (generations < 0) {
-            return new FillResult(
-                    "Error: Invalid generations value.",
-                    false
-            );
-        }
         // Create the database connection
         Database database = new Database();
         try {
             database.openConnection();
+            if (generations < 0) {
+                throw new Exception("Invalid generations value");
+            }
             UserDao userDao = new UserDao(database.getConnection());
             PersonDao personDao = new PersonDao(database.getConnection());
             GenerateGenerations generateGenerations = new GenerateGenerations(database.getConnection());
             // Get user associated with the username passed in
             User user = userDao.find(username);
             if (user == null) {
-                database.closeConnection(false);
-                return new FillResult(
-                        "Error: Invalid username",
-                        false
-                );
+                throw new Exception("Invalid username");
             }
             // Check if there is data already associated with that user. If there is, delete it
             List<Person> associatedPersons = personDao.GetAllPersons(username);
@@ -79,11 +72,11 @@ public class FillService {
             );
             database.closeConnection(true);
             return response;
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             database.closeConnection(false);
             e.printStackTrace();
             return new FillResult(
-                    "Error: Internal Server Error",
+                    "Error: " + e.getMessage(),
                     false
             );
         }
