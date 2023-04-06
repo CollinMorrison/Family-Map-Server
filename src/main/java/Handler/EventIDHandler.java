@@ -34,9 +34,9 @@ public class EventIDHandler implements HttpHandler{
                     if (response.isSuccess()) {
                         exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
                         success = true;
-                    } else if (response.getMessage() == "Error: Invalid AuthToken"
-                    || response.getMessage() == "Error: Invalid eventID"
-                    || response.getMessage() == "Error: Requested event does not belong to this user"){
+                    } else if (response.getMessage().equals("Error: Invalid AuthToken")
+                    || response.getMessage().equals("Error: Invalid eventID")
+                    || response.getMessage().equals("Error: Requested event does not belong to this user")){
                         exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
                     } else {
                         exchange.sendResponseHeaders(HttpURLConnection.HTTP_SERVER_ERROR, 0);

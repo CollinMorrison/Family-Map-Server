@@ -36,9 +36,9 @@ public class PersonIDHandler implements HttpHandler{
                         exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
                         success = true;
                     } else if (
-                            response.getMessage() == "Error: Invalid AuthToken" ||
-                            response.getMessage() == "Error: Invalid personID" ||
-                            response.getMessage() == "Error: The person is not associated with this user"
+                            response.getMessage().equals("Error: Invalid AuthToken") ||
+                            response.getMessage().equals("Error: Invalid personID") ||
+                            response.getMessage().equals("Error: The person is not associated with this user")
                     ){
                         exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
                     } else {
