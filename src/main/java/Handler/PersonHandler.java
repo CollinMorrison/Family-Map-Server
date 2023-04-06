@@ -14,6 +14,7 @@ public class PersonHandler implements HttpHandler{
         Gson gson = new Gson();
         PersonService personService = new PersonService();
         boolean success = false;
+        PersonResult response;
         try {
             if (exchange.getRequestMethod().toLowerCase().equals("get")) {
                 Headers reqHeaders = exchange.getRequestHeaders();
@@ -22,28 +23,30 @@ public class PersonHandler implements HttpHandler{
                     InputStream reqBody = exchange.getRequestBody();
                     String reqData = new String(reqBody.readAllBytes());
                     System.out.println(reqData);
-                    PersonResult response = personService.person(authToken);
+                    response = personService.person(authToken);
+                    String respData = gson.toJson(response);
                     // if the response was valid
-                    if (response != null) {
-                        String respData = gson.toJson(response);
+                    if (response.isSuccess()) {
                         exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                        OutputStream respBody = exchange.getResponseBody();
-                        writeString(respData, respBody);
-                        respBody.close();
                         success = true;
+                    } else if (response.getMessage() == "Error: Invalid AuthToken") {
+                        exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
                     } else {
-                        System.out.println("The persons could not be retrieved");
+                        exchange.sendResponseHeaders(HttpURLConnection.HTTP_SERVER_ERROR, 0);
                     }
+                    OutputStream respBody = exchange.getResponseBody();
+                    writeString(respData, respBody);
+                    respBody.close();
                 }
             }
-            if (!success) {
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
-                exchange.getResponseBody().close();
-            }
         } catch (IOException e) {
-            exchange.sendResponseHeaders(HttpURLConnection.HTTP_SERVER_ERROR,0);
-            exchange.getResponseBody().close();
             e.printStackTrace();
+            exchange.sendResponseHeaders(HttpURLConnection.HTTP_SERVER_ERROR,0);
+            response = new PersonResult(null, false, "Error: Internal Server Error");
+            String respData = gson.toJson(response);
+            OutputStream respBody = exchange.getResponseBody();
+            writeString(respData, respBody);
+            respBody.close();
         }
     }
 
