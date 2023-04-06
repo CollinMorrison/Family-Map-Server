@@ -1,6 +1,5 @@
 package Result;
 
-import Request.RegisterRequest;
 
 /**
  * Stores all information received from a Register Request

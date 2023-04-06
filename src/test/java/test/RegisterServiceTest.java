@@ -1,7 +1,6 @@
 package test;
 
 import DataAccess.DataAccessException;
-import DataAccess.Database;
 import Request.RegisterRequest;
 import Result.RegisterResult;
 import Service.ClearService;

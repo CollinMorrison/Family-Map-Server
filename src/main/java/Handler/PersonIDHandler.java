@@ -2,7 +2,6 @@ package Handler;
 import java.io.*;
 import java.net.*;
 
-import DataAccess.UserDao;
 import Result.PersonIDResult;
 import Service.PersonIDService;
 import com.google.gson.Gson;
@@ -14,7 +13,6 @@ public class PersonIDHandler implements HttpHandler{
         Gson gson = new Gson();
         PersonIDService personIDService = new PersonIDService();
         PersonIDResult response;
-        boolean success = false;
         try {
             if (exchange.getRequestMethod().toLowerCase().equals("get")) {
                 // if the request has a valid auth token
@@ -34,7 +32,6 @@ public class PersonIDHandler implements HttpHandler{
                     String respData = gson.toJson(response);
                     if (response.isSuccess()) {
                         exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                        success = true;
                     } else if (
                             response.getMessage().equals("Error: Invalid AuthToken") ||
                             response.getMessage().equals("Error: Invalid personID") ||

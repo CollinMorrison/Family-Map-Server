@@ -1,7 +1,5 @@
 package test;
 
-import DataAccess.DataAccessException;
-import DataAccess.Database;
 import Model.Event;
 import Model.Person;
 import Model.User;

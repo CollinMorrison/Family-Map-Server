@@ -2,7 +2,6 @@ package Handler;
 import java.io.*;
 import java.net.*;
 
-import DataAccess.DataAccessException;
 import Service.RegisterService;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -10,7 +9,6 @@ import com.sun.net.httpserver.*;
 import Request.RegisterRequest;
 import Result.RegisterResult;
 
-import static java.nio.file.Files.writeString;
 
 public class RegisterHandler implements HttpHandler{
     @Override
@@ -18,7 +16,6 @@ public class RegisterHandler implements HttpHandler{
         Gson gson = new Gson();
         RegisterService registerService = new RegisterService();
         RegisterResult response;
-        boolean success = false;
         try {
             if (exchange.getRequestMethod().toLowerCase().equals("post")) {
                 InputStream reqBody = exchange.getRequestBody();
@@ -52,7 +49,6 @@ public class RegisterHandler implements HttpHandler{
                     RegisterRequest request = new RegisterRequest(username, password, email, firstName, lastName, gender);
                     // Send request and get response
                     response = registerService.register(request);
-                    success = true;
                 }
                 String respData = gson.toJson(response);
                 if (!response.isSuccess()) {

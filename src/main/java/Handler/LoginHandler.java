@@ -11,11 +11,9 @@ import Request.LoginRequest;
 public class LoginHandler implements HttpHandler{
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        //System.out.println("In login handler");
         Gson gson = new Gson();
         LoginService loginService = new LoginService();
         LoginResult response;
-        boolean success = false;
         try {
             if (exchange.getRequestMethod().toLowerCase().equals("post")) {
                 //Get the request body
@@ -39,7 +37,6 @@ public class LoginHandler implements HttpHandler{
                     LoginRequest request = new LoginRequest(username, password);
                     //Send request and get response
                     response = loginService.login(request);
-                    success = true;
                 }
                 String respData = gson.toJson(response);
                 if (!response.isSuccess()) {

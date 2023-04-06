@@ -1,18 +1,12 @@
 package Service;
 
 import DataAccess.AuthTokenDao;
-import DataAccess.DataAccessException;
 import DataAccess.Database;
 import DataAccess.UserDao;
 import Model.AuthToken;
 import Model.User;
 import Request.LoginRequest;
 import Result.LoginResult;
-import com.google.gson.JsonObject;
-
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
 
 /**
  * Is called from the Login handler and calls the login method
@@ -30,7 +24,6 @@ public class LoginService {
             database.openConnection();
             //create the userDao and authTokenDao to interact with the database
             UserDao userDao = new UserDao(database.getConnection());
-            AuthTokenDao authTokenDao = new AuthTokenDao(database.getConnection());
             //Get the auth token associated with the username
             AuthToken authToken = userDao.Validate(r.getUsername(), r.getPassword());
             if (authToken == null) {

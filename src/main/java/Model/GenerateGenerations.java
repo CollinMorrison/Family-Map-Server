@@ -25,8 +25,8 @@ public class GenerateGenerations {
         String[] firstNames = serializer.loadFNames();
         String[] middleNames = serializer.loadMNames();
         String[] lastNames = serializer.loadSNames();
-        Person mother = null;
-        Person father = null;
+        Person mother;
+        Person father;
 
         if (generations >= 1) {
             mother = generatePerson("f", generations - 1, username, null, null, referenceYear - 13, null, maxGenerations);

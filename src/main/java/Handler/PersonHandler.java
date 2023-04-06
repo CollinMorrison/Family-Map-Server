@@ -5,7 +5,6 @@ import java.net.*;
 import Result.PersonResult;
 import Service.PersonService;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.sun.net.httpserver.*;
 
 public class PersonHandler implements HttpHandler{
@@ -13,7 +12,6 @@ public class PersonHandler implements HttpHandler{
     public void handle(HttpExchange exchange) throws IOException {
         Gson gson = new Gson();
         PersonService personService = new PersonService();
-        boolean success = false;
         PersonResult response;
         try {
             if (exchange.getRequestMethod().toLowerCase().equals("get")) {
@@ -28,7 +26,6 @@ public class PersonHandler implements HttpHandler{
                     // if the response was valid
                     if (response.isSuccess()) {
                         exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                        success = true;
                     } else if (response.getMessage().equals("Error: Invalid AuthToken")) {
                         exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
                     } else {

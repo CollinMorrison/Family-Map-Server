@@ -6,7 +6,6 @@ import Model.Event;
 import Model.User;
 import Result.EventResult;
 
-import javax.xml.crypto.Data;
 
 /**
  * Is called from the Event handler and calls the event method

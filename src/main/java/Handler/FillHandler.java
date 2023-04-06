@@ -2,8 +2,6 @@ package Handler;
 import java.io.*;
 import java.net.*;
 
-import DataAccess.DataAccessException;
-import Model.User;
 import Result.FillResult;
 import Service.FillService;
 import com.google.gson.Gson;
@@ -14,7 +12,6 @@ public class FillHandler implements HttpHandler{
     public void handle(HttpExchange exchange) throws IOException {
         Gson gson = new Gson();
         FillService fillService = new FillService();
-        boolean success = false;
         FillResult response;
         try {
             if (exchange.getRequestMethod().toLowerCase().equals("post")) {
@@ -33,7 +30,6 @@ public class FillHandler implements HttpHandler{
                 // If the response was valid
                 if (response.isSuccess()) {
                     exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                    success = true;
                 } else if (response.getMessage() == "Error: Internal Server Error"){
                     exchange.sendResponseHeaders(HttpURLConnection.HTTP_SERVER_ERROR, 0);
                 } else {

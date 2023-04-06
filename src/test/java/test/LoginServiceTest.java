@@ -1,11 +1,9 @@
 package test;
 
 import DataAccess.DataAccessException;
-import DataAccess.Database;
 import Request.LoginRequest;
 import Request.RegisterRequest;
 import Result.LoginResult;
-import Result.RegisterResult;
 import Service.ClearService;
 import Service.LoginService;
 import Service.RegisterService;

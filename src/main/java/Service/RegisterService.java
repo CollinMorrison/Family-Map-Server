@@ -1,7 +1,6 @@
 package Service;
 
 import DataAccess.AuthTokenDao;
-import DataAccess.DataAccessException;
 import DataAccess.Database;
 import DataAccess.UserDao;
 import Model.AuthToken;
@@ -10,8 +9,6 @@ import Model.User;
 import Request.RegisterRequest;
 import Result.RegisterResult;
 
-import java.io.IOException;
-import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -67,7 +64,6 @@ public class RegisterService {
             // Save the all applicable data to the database
             authTokenDao.insert(newAuthToken);
             userDao.insert(newUser);
-            User verifyUser = userDao.find(newUser.getUsername());
             database.closeConnection(true);
             // Returns the response
             return registerResult;

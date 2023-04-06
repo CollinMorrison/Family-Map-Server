@@ -1,7 +1,5 @@
 package Result;
 
-import Request.ClearRequest;
-
 /**
  * Stores all information received from a clear request
  */

@@ -18,7 +18,6 @@ public class LoadHandler implements HttpHandler{
     public void handle(HttpExchange exchange) throws IOException {
         Gson gson = new Gson();
         LoadService loadService = new LoadService();
-        boolean success = false;
         LoadResult response;
         try {
             if (exchange.getRequestMethod().toLowerCase().equals("post")) {
@@ -50,7 +49,6 @@ public class LoadHandler implements HttpHandler{
                 // if the response was valid
                 if (response.getSuccess()) {
                     exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                    success = true;
                 } else {
                     exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
                 }

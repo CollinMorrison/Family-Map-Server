@@ -1,8 +1,6 @@
 package test;
 
 import DataAccess.DataAccessException;
-import DataAccess.Database;
-import Request.FillRequest;
 import Request.RegisterRequest;
 import Service.ClearService;
 import Service.FillService;
@@ -14,8 +12,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class FillServiceTest {
     private FillService fillService;
-    private int generations;
-    private String username;
     private RegisterService registerService;
 
     @BeforeEach

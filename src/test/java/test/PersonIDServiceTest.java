@@ -1,16 +1,10 @@
 package test;
 
-import DataAccess.AuthTokenDao;
-import DataAccess.PersonDao;
-import DataAccess.UserDao;
-import Model.AuthToken;
 import Model.Event;
 import Model.Person;
 import Model.User;
 import Request.LoadRequest;
 import Request.LoginRequest;
-import Request.RegisterRequest;
-import Result.RegisterResult;
 import Service.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

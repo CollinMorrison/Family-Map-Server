@@ -1,7 +1,5 @@
 package Result;
 
-import Request.PersonIDRequest;
-
 /**
  * Contains the person requested in the request
  */

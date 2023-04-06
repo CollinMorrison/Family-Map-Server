@@ -73,10 +73,6 @@ public class Person {
         return associatedUsername;
     }
 
-    public void setAssociatedUsername(String associatedUsername) {
-        this.associatedUsername = associatedUsername;
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -105,17 +101,11 @@ public class Person {
         return fatherID;
     }
 
-    public void setFatherID(String fatherID) {
-        this.fatherID = fatherID;
-    }
 
     public String getMotherID() {
         return motherID;
     }
 
-    public void setMotherID(String motherID) {
-        this.motherID = motherID;
-    }
 
     public String getSpouseID() {
         return spouseID;

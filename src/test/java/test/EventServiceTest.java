@@ -1,7 +1,6 @@
 package test;
 
 import Request.RegisterRequest;
-import Result.EventResult;
 import Service.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

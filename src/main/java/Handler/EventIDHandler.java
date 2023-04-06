@@ -49,12 +49,12 @@ public class EventIDHandler implements HttpHandler{
                             null,
                             null,
                             null,
-                            Float.NaN,
-                            Float.NaN,
                             null,
                             null,
                             null,
-                            Integer.MIN_VALUE,
+                            null,
+                            null,
+                            null,
                             false,
                             "Error: An authorization token is required"
                     );
@@ -71,12 +71,12 @@ public class EventIDHandler implements HttpHandler{
                     null,
                     null,
                     null,
-                    Float.NaN,
-                    Float.NaN,
                     null,
                     null,
                     null,
-                    Integer.MIN_VALUE,
+                    null,
+                    null,
+                    null,
                     false,
                     "Error: Internal Server Error"
             );

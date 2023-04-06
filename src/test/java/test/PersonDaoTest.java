@@ -7,8 +7,6 @@ import Model.Person;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,14 +35,13 @@ public class PersonDaoTest {
     @Test
     public void insertPass() throws DataAccessException {
         pDao.Insert(bestPerson);
-        String testID = bestPerson.getPersonID();
         Person compareTest = pDao.Find(bestPerson.getPersonID());
         assertNotNull(compareTest);
         assertEquals(bestPerson, compareTest);
     }
 
     @Test
-    public void insertFail() throws DataAccessException {
+    public void insertFail() {
         Person secondPerson = new Person("otherPersonID",
                 "otherAssociatedUsername",
                 "other firstName",

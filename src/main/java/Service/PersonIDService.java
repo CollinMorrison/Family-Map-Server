@@ -6,9 +6,6 @@ import Model.Person;
 import Model.User;
 import Result.PersonIDResult;
 
-import javax.xml.crypto.Data;
-import java.util.Objects;
-
 /**
  * Is called from the PersonID handler and calls the personID method
  */

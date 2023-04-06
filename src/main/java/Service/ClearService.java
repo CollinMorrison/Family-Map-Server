@@ -1,7 +1,6 @@
 package Service;
 
 import DataAccess.*;
-import Model.Person;
 import Result.ClearResult;
 
 /**
