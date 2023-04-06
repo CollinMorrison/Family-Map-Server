@@ -38,6 +38,7 @@ public class FillService {
             // Get user associated with the username passed in
             User user = userDao.find(username);
             if (user == null) {
+                database.closeConnection(false);
                 return new FillResult(
                         "Error: Invalid username",
                         false

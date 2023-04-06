@@ -42,4 +42,8 @@ public class LoginResult {
         this.success = success;
         this.message = message;
     }
+
+    public String getAuthtoken() {
+        return authtoken;
+    }
 }

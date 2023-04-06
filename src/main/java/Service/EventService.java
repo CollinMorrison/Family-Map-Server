@@ -25,12 +25,14 @@ public class EventService {
             AuthTokenDao authTokenDao = new AuthTokenDao(database.getConnection());
             AuthToken authTokenObject = authTokenDao.FindByAuthtoken(authToken);
             if (authTokenObject == null) {
+                database.closeConnection(false);
                 return null;
             }
             String username = authTokenObject.getUsername();
             UserDao userDao = new UserDao(database.getConnection());
             User user = userDao.find(username);
             if (user == null) {
+                database.closeConnection(false);
                 return null;
             }
             // Get the list of events associated with the valid user

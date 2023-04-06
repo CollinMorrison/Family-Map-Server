@@ -42,6 +42,7 @@ public class PersonIDResult {
      * Whether the request was successful
      */
     private boolean success;
+    private String message;
 
     /**
      * Constructor for the PersonID Response
@@ -55,7 +56,7 @@ public class PersonIDResult {
      * @param spouseID
      * @param success
      */
-    public PersonIDResult(String associatedUsername, String personID, String firstName, String lastName, String gender, String fatherID, String motherID, String spouseID, boolean success) {
+    public PersonIDResult(String associatedUsername, String personID, String firstName, String lastName, String gender, String fatherID, String motherID, String spouseID, boolean success, String message) {
         this.associatedUsername = associatedUsername;
         this.personID = personID;
         this.firstName = firstName;
@@ -65,6 +66,14 @@ public class PersonIDResult {
         this.motherID = motherID;
         this.spouseID = spouseID;
         this.success = success;
+        this.message = message;
     }
 
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public String getMessage() {
+        return message;
+    }
 }

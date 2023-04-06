@@ -13,6 +13,7 @@ public class PersonIDHandler implements HttpHandler{
     public void handle(HttpExchange exchange) throws IOException {
         Gson gson = new Gson();
         PersonIDService personIDService = new PersonIDService();
+        PersonIDResult response;
         boolean success = false;
         try {
             if (exchange.getRequestMethod().toLowerCase().equals("get")) {
@@ -28,28 +29,63 @@ public class PersonIDHandler implements HttpHandler{
                     String path = uri.getPath();
                     String[] variables = path.split("/");
                     String personID = variables[2];
-                    PersonIDResult response = personIDService.personID(authToken, personID);
+                    response = personIDService.personID(authToken, personID);
                     // if the response was valid
-                    if (response != null) {
-                        String respData = gson.toJson(response);
+                    String respData = gson.toJson(response);
+                    if (response.isSuccess()) {
                         exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                        OutputStream respBody = exchange.getResponseBody();
-                        writeString(respData, respBody);
-                        respBody.close();
                         success = true;
+                    } else if (
+                            response.getMessage() == "Error: Invalid AuthToken" ||
+                            response.getMessage() == "Error: Invalid personID" ||
+                            response.getMessage() == "Error: The person is not associated with this user"
+                    ){
+                        exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
                     } else {
-                        System.out.println("The person could not be retrieved");
+                        exchange.sendResponseHeaders(HttpURLConnection.HTTP_SERVER_ERROR, 0);
                     }
+                    OutputStream respBody = exchange.getResponseBody();
+                    writeString(respData, respBody);
+                    respBody.close();
+                } else {
+                    response = new PersonIDResult(
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            false,
+                            "Error: AuthToken is required"
+                    );
+                    String respData = gson.toJson(response);
+                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+                    OutputStream respBody = exchange.getResponseBody();
+                    writeString(respData, respBody);
+                    respBody.close();
                 }
             }
-            if (!success) {
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
-                exchange.getResponseBody().close();
-            }
         } catch (IOException e) {
-            exchange.sendResponseHeaders(HttpURLConnection.HTTP_SERVER_ERROR,0);
-            exchange.getResponseBody().close();
             e.printStackTrace();
+            response = new PersonIDResult(
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    false,
+                    "Error: Internal Server Error"
+            );
+            exchange.sendResponseHeaders(HttpURLConnection.HTTP_SERVER_ERROR,0);
+            String respData = gson.toJson(response);
+            OutputStream respBody = exchange.getResponseBody();
+            writeString(respData, respBody);
+            respBody.close();
         }
     }
 

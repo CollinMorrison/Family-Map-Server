@@ -23,12 +23,14 @@ public class EventIDService {
             AuthTokenDao authTokenDao = new AuthTokenDao(database.getConnection());
             AuthToken authTokenObject = authTokenDao.FindByAuthtoken(authToken);
             if (authTokenObject == null) {
+                database.closeConnection(false);
                 return null;
             }
             String username = authTokenObject.getUsername();
             UserDao userDao = new UserDao(database.getConnection());
             User user = userDao.find(username);
             if (user == null) {
+                database.closeConnection(false);
                 return null;
             }
             // Get the event with the eventID
@@ -36,6 +38,7 @@ public class EventIDService {
             Event event = eventDao.find(eventID);
             // Make sure the event is associated with the right user
             if (!event.getAssociatedUsername().equals(user.getUsername())) {
+                database.closeConnection(false);
                 return null;
             }
             // Construct the response
