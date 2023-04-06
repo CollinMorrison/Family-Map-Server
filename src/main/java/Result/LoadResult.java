@@ -22,4 +22,8 @@ public class LoadResult {
         this.message = message;
         this.success = success;
     }
+
+    public Boolean getSuccess() {
+        return success;
+    }
 }

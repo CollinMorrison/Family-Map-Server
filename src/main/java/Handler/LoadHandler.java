@@ -19,6 +19,7 @@ public class LoadHandler implements HttpHandler{
         Gson gson = new Gson();
         LoadService loadService = new LoadService();
         boolean success = false;
+        LoadResult response;
         try {
             if (exchange.getRequestMethod().toLowerCase().equals("post")) {
                 InputStream reqBody = exchange.getRequestBody();
@@ -26,37 +27,45 @@ public class LoadHandler implements HttpHandler{
                 System.out.println(reqData);
                 // Get the data as JSON arrays
                 JsonObject reqObject = gson.fromJson(reqData, JsonObject.class);
-                JsonArray users = reqObject.get("users").getAsJsonArray();
-                JsonArray persons = reqObject.get("persons").getAsJsonArray();
-                JsonArray events = reqObject.get("events").getAsJsonArray();
-                // Convert the data to arrays of objects
-                User[] userArray = gson.fromJson(users, User[].class);
-                Person[] personArray = gson.fromJson(persons, Person[].class);
-                Event[] eventArray = gson.fromJson(events, Event[].class);
-                // Construct a load request
-                LoadRequest loadRequest = new LoadRequest(userArray, personArray, eventArray);
-                // Get response
-                LoadResult response = loadService.load(loadRequest);
+                // If there is anything missing from the request
+                if (
+                        reqObject.has("users") &&
+                                reqObject.has("persons") &&
+                                reqObject.has("events")
+                ) {
+                    JsonArray users = reqObject.get("users").getAsJsonArray();
+                    User[] userArray = gson.fromJson(users, User[].class);
+                    JsonArray persons = reqObject.get("persons").getAsJsonArray();
+                    Person[] personArray = gson.fromJson(persons, Person[].class);
+                    JsonArray events = reqObject.get("events").getAsJsonArray();
+                    Event[] eventArray = gson.fromJson(events, Event[].class);
+                    // Construct a load request
+                    LoadRequest loadRequest = new LoadRequest(userArray, personArray, eventArray);
+                    // Get response
+                    response = loadService.load(loadRequest);
+                } else {
+                    response = new LoadResult("Error: Request body must include users, persons, and events", false);
+                }
+                String respData = gson.toJson(response);
                 // if the response was valid
-                if (response != null) {
-                    String respData = gson.toJson(response);
+                if (response.getSuccess()) {
                     exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                    OutputStream respBody = exchange.getResponseBody();
-                    writeString(respData, respBody);
-                    respBody.close();
                     success = true;
                 } else {
-                    System.out.println("Invalid request");
+                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
                 }
-            }
-            if (!success) {
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_SERVER_ERROR, 0);
-                exchange.getResponseBody().close();
+                OutputStream respBody = exchange.getResponseBody();
+                writeString(respData, respBody);
+                respBody.close();
             }
         } catch (IOException e) {
-            exchange.sendResponseHeaders(HttpURLConnection.HTTP_SERVER_ERROR, 0);
-            exchange.getResponseBody().close();
             e.printStackTrace();
+            response = new LoadResult("Error: Internal Server Error", false);
+            exchange.sendResponseHeaders(HttpURLConnection.HTTP_SERVER_ERROR, 0);
+            String respData = gson.toJson(response);
+            OutputStream respBody = exchange.getResponseBody();
+            writeString(respData, respBody);
+            respBody.close();
         }
     }
 

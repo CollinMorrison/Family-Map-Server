@@ -39,6 +39,7 @@ public class PersonService {
             database.closeConnection(true);
             return response;
         } catch(DataAccessException e) {
+            database.closeConnection(false);
             e.printStackTrace();
             return null;
         }

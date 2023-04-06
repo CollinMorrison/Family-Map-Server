@@ -53,8 +53,9 @@ public class LoadService {
             database.closeConnection(true);
             return response;
         } catch (DataAccessException e) {
+            database.closeConnection(false);
             e.printStackTrace();
-            return null;
+            return new LoadResult("Error: " + e.getMessage(), false);
         }
     }
 }

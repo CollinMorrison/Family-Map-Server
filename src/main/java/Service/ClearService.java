@@ -37,6 +37,7 @@ public class ClearService {
             // Return clear result
             return clearResult;
         } catch (DataAccessException e) {
+            database.closeConnection(false);
             e.printStackTrace();
             return new ClearResult("Error: Internal Server Error", false);
         }
