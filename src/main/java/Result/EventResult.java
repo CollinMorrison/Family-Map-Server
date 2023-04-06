@@ -15,13 +15,24 @@ public class EventResult {
      */
     private boolean success;
 
+    private String message;
+
     /**
      * Constructor for the Event Result
      * @param data
      * @param success
      */
-    public EventResult(Event[] data, boolean success) {
+    public EventResult(Event[] data, boolean success, String message) {
         this.data = data;
         this.success = success;
+        this.message = message;
+    }
+
+    public boolean isSuccess () {
+        return success;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }

@@ -25,27 +25,29 @@ public class EventService {
             AuthTokenDao authTokenDao = new AuthTokenDao(database.getConnection());
             AuthToken authTokenObject = authTokenDao.FindByAuthtoken(authToken);
             if (authTokenObject == null) {
-                database.closeConnection(false);
-                return null;
+                throw new Exception("Invalid AuthToken");
             }
             String username = authTokenObject.getUsername();
             UserDao userDao = new UserDao(database.getConnection());
             User user = userDao.find(username);
             if (user == null) {
-                database.closeConnection(false);
-                return null;
+                throw new Exception("Invalid AuthToken");
             }
             // Get the list of events associated with the valid user
             EventDao eventDao = new EventDao(database.getConnection());
             Event[] events = eventDao.FindByUser(user).toArray(new Event[0]);
             // Construct the response
-            EventResult response = new EventResult(events, true);
+            EventResult response = new EventResult(events, true, null);
             database.closeConnection(true);
             return response;
-        } catch(DataAccessException e) {
+        } catch(Exception e) {
             database.closeConnection(false);
             e.printStackTrace();
-            return null;
+            return new EventResult(
+                    null,
+                    false,
+                    "Error: " + e.getMessage()
+            );
         }
     }
 }

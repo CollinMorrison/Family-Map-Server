@@ -14,12 +14,10 @@ import static org.junit.jupiter.api.Assertions.*;
 public class EventIDServiceTest {
     private EventIDService eventIDService;
     private ClearService clearService;
-    private RegisterService registerService;
     private LoadService loadService;
     private LoginService loginService;
     private LoadRequest loadRequest;
     private String authToken;
-    private String eventID;
 
     @BeforeEach
     public void setUp() {
