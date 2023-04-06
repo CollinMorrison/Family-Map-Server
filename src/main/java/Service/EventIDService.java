@@ -64,12 +64,12 @@ public class EventIDService {
                     null,
                     null,
                     null,
-                    Float.NaN,
-                    Float.NaN,
                     null,
                     null,
                     null,
-                    Integer.MIN_VALUE,
+                    null,
+                    null,
+                    null,
                     false,
                     "Error: " + e.getMessage()
             );

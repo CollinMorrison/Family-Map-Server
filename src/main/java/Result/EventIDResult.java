@@ -19,11 +19,11 @@ public class EventIDResult {
     /**
      * Latitude of the event
      */
-    private float latitude;
+    private Float latitude;
     /**
      * longitude of the event
      */
-    private float longitude;
+    private Float longitude;
     /**
      * country in which the event took place
      */
@@ -39,7 +39,7 @@ public class EventIDResult {
     /**
      * Year the event took place
      */
-    private int year;
+    private Integer year;
     /**
      * Whether the request was successful
      */
@@ -60,7 +60,7 @@ public class EventIDResult {
      * @param year
      * @param success
      */
-    public EventIDResult(String associatedUsername, String eventID, String personID, float latitude, float longitude, String country, String city, String eventType, int year, boolean success, String message) {
+    public EventIDResult(String associatedUsername, String eventID, String personID, Float latitude, Float longitude, String country, String city, String eventType, Integer year, boolean success, String message) {
         this.associatedUsername = associatedUsername;
         this.eventID = eventID;
         this.personID = personID;
@@ -80,5 +80,29 @@ public class EventIDResult {
 
     public String getMessage() {
         return message;
+    }
+
+    public float getLatitude() {
+        return latitude;
+    }
+
+    public float getLongitude() {
+        return longitude;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setLatitude(Float latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(float longitude) {
+        this.longitude = longitude;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
     }
 }
