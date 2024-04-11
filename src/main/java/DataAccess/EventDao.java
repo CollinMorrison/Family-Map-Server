@@ -27,9 +27,9 @@ public class EventDao {
     /**
      * Inserts an event into the database
      * @param event
-     * @throws DataAccessException
+     * @throws DataAccess.DataAccessException
      */
-    public void insert(Event event) throws DataAccessException {
+    public void insert(Event event) throws DataAccess.DataAccessException {
         //We can structure our string to be similar to a sql command, but if we insert question
         //marks we can change them later with help from the statement
         String sql = "INSERT INTO Event (EventID, AssociatedUsername, PersonID, Latitude, Longitude, " +
@@ -51,7 +51,7 @@ public class EventDao {
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new DataAccessException("Error encountered while inserting an event into the database");
+            throw new DataAccess.DataAccessException("Error encountered while inserting an event into the database");
         }
     }
 
@@ -59,9 +59,9 @@ public class EventDao {
      * Finds an event in the database based on its ID
      * @param eventID
      * @return
-     * @throws DataAccessException
+     * @throws DataAccess.DataAccessException
      */
-    public Event find(String eventID) throws DataAccessException {
+    public Event find(String eventID) throws DataAccess.DataAccessException {
         Event event;
         ResultSet rs;
         String sql = "SELECT * FROM Event WHERE EventID = ?;";
@@ -79,22 +79,22 @@ public class EventDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new DataAccessException("Error encountered while finding an event in the database");
+            throw new DataAccess.DataAccessException("Error encountered while finding an event in the database");
         }
 
     }
 
     /**
      * Clears all events from the database
-     * @throws DataAccessException
+     * @throws DataAccess.DataAccessException
      */
-    public void clear() throws DataAccessException {
+    public void clear() throws DataAccess.DataAccessException {
         String sql = "DELETE FROM Event";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new DataAccessException("Error encountered while clearing the event table");
+            throw new DataAccess.DataAccessException("Error encountered while clearing the event table");
         }
     }
 
@@ -103,7 +103,7 @@ public class EventDao {
      * @param user
      * @return List of events
      */
-    public List<Event> FindByUser(User user) throws DataAccessException {
+    public List<Event> FindByUser(User user) throws DataAccess.DataAccessException {
         List<Event> associatedEvents = new ArrayList<>();
         String associatedUsername = user.getUsername();
         ResultSet rs;
@@ -126,7 +126,7 @@ public class EventDao {
             return associatedEvents;
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new DataAccessException("Error encountered when getting a list of a user's event from the event table");
+            throw new DataAccess.DataAccessException("Error encountered when getting a list of a user's event from the event table");
         }
     }
 }
